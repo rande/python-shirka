@@ -5,12 +5,14 @@ This is a POC a bot with twisted, mostly a self python learning project
 
 ### Consumers
 
- - flowdock : read message from flow dock stream API
+ - flowdock: read message from flow dock stream API
 
 ### Responders
  
-  - rageface: return rage face 
-  - flowdock: whois
+ - face
+ - whois
+ - math
+
 
 
 ## Installation
@@ -20,6 +22,7 @@ Install dependencies
     pip install twisted
     pip install twistedhttpstream
     pip install requests
+    pip install sympy
     
 ## Usage
 
