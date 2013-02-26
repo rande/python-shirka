@@ -1,5 +1,5 @@
 from responders import Responder
-
+import unittest
 import requests
 
 class FlowdockWhoisResponder(Responder):
@@ -37,3 +37,11 @@ class FlowdockWhoisResponder(Responder):
 
         return False
         
+
+class TestFlowdockWhoisResponder(unittest.TestCase):
+    def setUp(self):
+        self.responder = FlowdockWhoisResponder('orga', 'flow', 'token')
+
+    def test_support(self):
+        self.assertTrue(self.responder.support("whois"))
+        self.assertFalse(self.responder.support("fuu"))

@@ -1,5 +1,7 @@
 from responders import Responder
 
+import unittest
+
 class RagefaceResponder(Responder):
     IMG = {
         "badumtss": "http://fuuu.us/363.png",
@@ -28,6 +30,9 @@ class RagefaceResponder(Responder):
     def generate(self, message):
         words = message.split(" ")
 
+        if len(words) < 2:
+            return False
+
         if words[1] == 'help':
             return "Face available: %s" % (", ".join(RagefaceResponder.IMG))
 
@@ -35,3 +40,21 @@ class RagefaceResponder(Responder):
             return RagefaceResponder.IMG[words[1]]
 
         return False
+
+
+class TestRagefaceResponder(unittest.TestCase):
+    def setUp(self):
+        self.responder = RagefaceResponder()
+
+    def test_support(self):
+        self.assertTrue(self.responder.support("face"))
+        self.assertFalse(self.responder.support("fuu"))
+
+    def test_incomplete_command(self):
+        self.assertFalse(self.responder.generate("face"))
+
+    def test_help(self):
+        self.assertIsNotNone(self.responder.generate("face help"))
+
+    def test_valid(self):
+        self.assertEquals(self.responder.generate("face win"), "http://fuuu.us/188.png")
