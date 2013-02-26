@@ -1,6 +1,6 @@
 from responders import Responder
 
-class TauntResponder(Responder):
+class BigbroResponder(Responder):
     def support(self, message):
         return message[0:2] == 'pt'
 
