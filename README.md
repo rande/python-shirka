@@ -8,11 +8,12 @@ This is a POC a bot with twisted, mostly a self python learning project
  - flowdock: read message from flow dock stream API
 
 ### Responders
- 
+
  - face
  - whois
  - math
-
+ - wat
+ - xkcd
 
 
 ## Installation
@@ -23,7 +24,7 @@ Install dependencies
     pip install twistedhttpstream
     pip install requests
     pip install sympy
-    
+
 ## Usage
 
 ```python
@@ -41,11 +42,11 @@ flow         = 'FLOW'
 user_token   = 'USER_FLOWDOCK_TOKEN'
 flow_token   = 'FLOW_FLOWDOCK_TOKEN'
 url          = "https://stream.flowdock.com/flows/%s/%s" % (organisation, flow)
-        
+
 if __name__ == "__main__":
-    
+
     responders = [
-        RagefaceResponder(), 
+        RagefaceResponder(),
         FlowdockWhoisResponder(organisation, flow, user_token)
     ]
 
