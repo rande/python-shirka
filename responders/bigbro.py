@@ -16,13 +16,14 @@ class BigbroResponder(Responder):
 
         return {
             'content': "\t\t1 point %s pour %s\n" % (words[1], words[2]),
+            'tags': ['#bigbro']
         }
 
         return False
 
-class TestMathResponder(unittest.TestCase):
+class TestBigbroResponder(unittest.TestCase):
     def setUp(self):
-        self.responder = MathResponder()
+        self.responder = BigbroResponder()
 
     def test_support(self):
         self.assertTrue(self.responder.support("pt"))
@@ -35,4 +36,4 @@ class TestMathResponder(unittest.TestCase):
         self.assertFalse(self.responder.generate("pt salut"))
 
     def test_valid(self):
-        self.assertEquals(self.responder.generate("pt cool rande"), "\t\t1 point cool pour rande\n")
+        self.assertEquals(self.responder.generate("pt cool rande"), {'content': '\t\t1 point cool pour rande\n', 'tags': ['#bigbro']})
