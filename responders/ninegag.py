@@ -12,4 +12,6 @@ class NineGagResponder(Responder):
         node = json.load(urllib2.urlopen("http://infinigag.eu01.aws.af.cm/?section=hot"))['images']
         nbImages = 0
 
-        for image in node: nbImages += 1return node[randint(0, nbImages)]['image']['small']
+        for image in node: nbImages += 1
+
+        return node[randint(0, nbImages)]['image']['small']
