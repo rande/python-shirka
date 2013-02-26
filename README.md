@@ -33,7 +33,7 @@ from twisted.internet import reactor
 
 #from flowdock import FlowDock
 
-from responders import RagefaceResponder, FlowdockWhoisResponder
+from responders import RagefaceResponder, FlowdockWhoisResponder, NineGagResponder
 from consumers import FlowDockConsumer
 
 # configure
@@ -47,7 +47,8 @@ if __name__ == "__main__":
     
     responders = [
         RagefaceResponder(), 
-        FlowdockWhoisResponder(organisation, flow, user_token)
+        FlowdockWhoisResponder(organisation, flow, user_token),
+        NineGagResponder()
     ]
 
     twistedhttpstream.stream(reactor, url, FlowDockConsumer('nono', flow_token, responders), username=user_token, password="")
