@@ -25,6 +25,11 @@ Install dependencies
     pip install requests
     pip install sympy
 
+## Running Tests
+
+    python test.py
+
+
 ## Usage
 
 ```python
