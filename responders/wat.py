@@ -8,5 +8,6 @@ class WatResponder(Responder):
         return message[0:4] == 'wat'
 
     def generate(self, message):
-        r = requests.get('http://watme.herokuapp.com/random').json
-        return "%s" % r["wat"]
+        r = requests.get('http://watme.herokuapp.com/random').json()
+
+        return r['wat']
