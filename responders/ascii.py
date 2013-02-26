@@ -13,9 +13,9 @@ class AsciiResponder(Responder):
         
         return re.sub('^|\n', '\n\t', ascii)
 
-class TestWatResponder(unittest.TestCase):
+class TestAsciiResponder(unittest.TestCase):
     def setUp(self):
-        self.responder = WatResponder()
+        self.responder = AsciiResponder()
 
     def test_support(self):
         self.assertTrue(self.responder.support("ascii"))
