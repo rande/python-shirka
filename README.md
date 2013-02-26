@@ -14,6 +14,7 @@ This is a POC a bot with twisted, mostly a self python learning project
  - math
  - wat
  - xkcd
+ - ascii
 
 
 ## Installation
