@@ -23,6 +23,7 @@ Install dependencies
     pip install twistedhttpstream
     pip install requests
     pip install sympy
+    pip install pyopenssl
     
 ## Usage
 
@@ -30,7 +31,7 @@ Install dependencies
 import twistedhttpstream
 from twisted.internet import reactor
 
-from flowdock import FlowDock
+#from flowdock import FlowDock
 
 from responders import RagefaceResponder, FlowdockWhoisResponder
 from consumers import FlowDockConsumer
