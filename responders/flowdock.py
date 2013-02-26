@@ -31,7 +31,7 @@ class FlowdockWhoisResponder(Responder):
 
         if user:
             return {
-                'content': "%s is %s (%s)" % (words[1], user['name'], user['email']),
+                'content': "%s is %s - %s (id:%s)" % (words[1], user['name'], user['email'], user['id']),
                 'tags': ['#contact']
             }
 
