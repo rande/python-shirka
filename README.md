@@ -29,8 +29,8 @@ Install dependencies
 
 ## Running Tests
 
-    python test.py
-
+    python -m unittest test.py # run all tests
+    python -m unittest responders.xkcd # run one test
 
 ## Usage
 
