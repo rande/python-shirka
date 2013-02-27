@@ -1,6 +1,7 @@
 
 import requests
 import twistedhttpstream
+import exceptions
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
@@ -16,7 +17,9 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         self.token = token
 
     def connectionMade(self):
-        print "connected..."
+        self.post({
+            'content': "\tHello, I am a bot!\n\tYou can improve my soul here: https://github.com/rande/nono-le-robot !",
+        })
 
     def connectionFailed(self, why):
         print "cannot connect:", why
@@ -59,16 +62,22 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
                 print "Found responder: %s" % responder
 
-                response = self.normalize(responder.generate(message['content']))
-
-                if response == False:
-                    return
+                try:
+                    response = responder.generate(message['content'])
+                except exceptions.Exception, e:
+                    return "\tError while handling message:\n\t %s" % e.message
 
                 self.post(response)
 
     def post(self, response):
 
+        response = self.normalize(response)
+
+        if response == False:
+            return
+
         print "send response: %s" % response
+
         r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
             "content": response['content'],
             "external_user_name": self.name,

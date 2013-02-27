@@ -1,0 +1,14 @@
+language: python
+python:
+  - "2.7"
+
+# command to install dependencies
+install:
+  -  pip install -q twisted
+  -  pip install -q twistedhttpstream
+  -  pip install -q requests
+  -  pip install -q sympy
+  -  pip install -q mocker
+
+# command to run tests
+script: python -m unittest test
