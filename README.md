@@ -15,7 +15,7 @@ This is a POC a bot with twisted, mostly a self python learning project
  - wat
  - xkcd
  - ascii
-
+ - 9gag
 
 ## Installation
 
@@ -25,6 +25,7 @@ Install dependencies
     pip install twistedhttpstream
     pip install requests
     pip install sympy
+    pip install mocker
 
 ## Running Tests
 
