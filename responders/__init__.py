@@ -29,3 +29,4 @@ from xkcd import XkcdResponder
 from bigbro import BigbroResponder
 from ascii import AsciiResponder
 from ninegag import NineGagResponder
+from link import LinkResponder
