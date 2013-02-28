@@ -26,6 +26,8 @@ Install dependencies
     pip install requests
     pip install sympy
     pip install mocker
+    pip install pyopenssl
+    pip install python-flowdock
 
 ## Running Tests
 

@@ -2,6 +2,29 @@
 import requests
 import twistedhttpstream
 import exceptions
+import threading
+
+from responders import Responder, Response, StreamResponse
+
+class StreamAssistant(object):
+    def __init__(self, consumer):
+        # self.responses = []
+        self.consumer = consumer
+
+    def add(self, response):
+        # self.responses.append(response)
+        self.start(response)
+
+    def start(self, response):
+
+        print "Start %s : " % response
+
+        def start_responder(response, consumer):
+            response.handle(consumer)
+                
+        t = threading.Thread(target=start_responder, args=(response, self.consumer))
+        t.run()
+
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
@@ -15,10 +38,11 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         self.responders = responders
         self.name = name
         self.token = token
+        self.stream_assistant = StreamAssistant(self)
 
     def connectionMade(self):
         self.post({
-            'content': "\tHello, I am a bot!\n\tYou can improve my soul here: https://github.com/rande/nono-le-robot !",
+            'content': "\tHello, I am a bot! (dev mode)\n\tYou can improve my soul here: https://github.com/rande/nono-le-robot !",
         })
 
     def connectionFailed(self, why):
@@ -26,21 +50,11 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         reactor.stop()
 
     def normalize(self, response):
-
         if response == False:
             return False
 
-        if not isinstance(response, (dict)):
-            return {
-                'content': response,
-                'tags': []
-            }
-
-        if 'tags' not in response:
-            response['tags'] = []
-
-        if 'content' not in response:
-            return False
+        if not isinstance(response, (Response)):
+            response = Response(response)
 
         return response
 
@@ -67,21 +81,40 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
                 except exceptions.Exception, e:
                     return "\tError while handling message:\n\t %s" % e.message
 
-                self.post(response)
+                if isinstance(response, StreamResponse):
+                    self.stream_assistant.add(response)
+                else:
+                    self.post(response)
+
+    def normalize(self, response):
+        if response == False:
+            return
+
+        if isinstance(response, (dict)):
+            r = Response(response['content'])
+
+            if 'tags' in response:
+                r.tags = response['tags']
+
+            return r
+
+        if not isinstance(response, Response):
+            return Response(response)
+
+        return response
 
     def post(self, response):
-
         response = self.normalize(response)
 
-        if response == False:
+        if response in [False, None]:
             return
 
         print "send response: %s" % response
 
         r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
-            "content": response['content'],
+            "content": response.content,
             "external_user_name": self.name,
-            "tags":  response['tags']
+            "tags":  response.tags
         })
 
         print r

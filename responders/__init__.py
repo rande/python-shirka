@@ -6,20 +6,26 @@ class Responder(object):
     def generate(message):
         pass
 
-class StreamResponder(Responder):
-    def __init__(self):
+class Response(object):
+    def __init__(self, content):
+        self.content = content
+        self.tags = []
+
+    def __str__(self):
+        return self.content
+
+
+class StreamResponse(Response):
+    def __init__(self, content):
         self.is_completed = False
-        self.messages = []
-
-    def pop(self):
-        return self.messages.pop()
-
-    def push(self, message):
-        return self.messages.append(message)
+        self.content = content
 
     def stop(self):
         self.is_completed = True
 
+    def handle(self, consumer):
+        self.is_completed = True
+        
 
 from rageface import RagefaceResponder
 from flowdock import FlowdockWhoisResponder
@@ -30,3 +36,4 @@ from bigbro import BigbroResponder
 from ascii import AsciiResponder
 from ninegag import NineGagResponder
 from link import LinkResponder
+from reminder import ReminderResponder

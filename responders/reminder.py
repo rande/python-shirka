@@ -1,10 +1,19 @@
-from responders import StreamResponder
+from responders import Responder, StreamResponse
 import requests, json, unittest, re, time, threading
 
-class ReminderResponder(StreamResponder):
+class ReminderStreamResponse(StreamResponse):
+    def handle(self, consumer):
+        consumer.post("Roger that!! (reminder set)")
+
+        def remind(consumer, message):
+            consumer.post("Reminder: %s" % message)
+
+        t = threading.Timer(self.end - time.time(), remind, [consumer, self.content])
+        t.run()
+
+class ReminderResponder(Responder):
 
     def __init__(self):
-        
         self.pattern = re.compile("")
         super(ReminderResponder, self).__init__()
 
@@ -19,19 +28,13 @@ class ReminderResponder(StreamResponder):
         
         end = self.get_time(format)
 
-        if not end:
+        if end == False:
             return False
 
-        self.push("Roger that!! (reminder set)")
+        response = ReminderStreamResponse(message)
+        response.end = end
 
-        def remind(responder, message):
-            responder.push(message)
-            responder.stop()
-
-        t = threading.Timer(end - time.time(), remind, [self, message])
-        t.run()
-
-        return True
+        return response
 
     def get_time(self, number):
         number, format = re.match("([0-9]*)(.*)", number).groups()
@@ -66,10 +69,6 @@ class TestReminderResponder(unittest.TestCase):
         self.assertFalse(self.responder.generate("reminder 15j see raph about webservices"))
 
     def test_valid(self):
-        self.assertFalse(self.responder.is_completed)
-        self.assertTrue(self.responder.generate("reminder 0s see raph about webservices"))
-        
-        time.sleep(1)
-
-        self.assertEquals(['Roger that!! (reminder set)', 'see raph about webservices'], self.responder.messages)
-        self.assertTrue(self.responder.is_completed)
+        response = self.responder.generate("reminder 0s see raph about webservices")
+        self.assertIsInstance(response, ReminderStreamResponder)
+        self.assertIsNotNone(response.end)
