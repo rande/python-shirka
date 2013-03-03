@@ -70,5 +70,5 @@ class TestReminderResponder(unittest.TestCase):
 
     def test_valid(self):
         response = self.responder.generate("reminder 0s see raph about webservices")
-        self.assertIsInstance(response, ReminderStreamResponder)
+        self.assertIsInstance(response, ReminderStreamResponse)
         self.assertIsNotNone(response.end)
