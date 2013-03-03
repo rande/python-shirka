@@ -17,7 +17,8 @@ class Response(object):
     def __init__(self, content):
         self.content = content
         self.tags = []
-
+        self.command = ""
+        
     def __str__(self):
         return self.content
 

@@ -11,7 +11,7 @@ class XkcdResponder(Responder):
     def generate(self, message):
         """
         usage: xkcd integer
-        retrieve xkcd image from the provided integer
+        retrieves xkcd image from the provided integer
         """
 
         try:

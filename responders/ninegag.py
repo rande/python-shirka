@@ -10,7 +10,7 @@ class NineGagResponder(Responder):
     def generate(self, message):
         """
         usage: 9gag
-        retrieve a random 9gag image
+        retrieves a random 9gag image
         """
         section = requests.get("http://infinigag.eu01.aws.af.cm/?section=hot").json()
 

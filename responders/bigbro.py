@@ -8,7 +8,7 @@ class BigbroResponder(Responder):
     def generate(self, message):
         """
         usage: pt user message
-        Generate a point to the provided user
+        Generates a point to the provided user
         """
         words = message.split(" ")
 

@@ -15,7 +15,7 @@ class HelpResponder(Responder):
             if not responder.generate.__doc__:
                 continue
 
-            help = "\n".join([line.strip() for line in responder.generate.__doc__.split("\n")])
+            help = "\n".join([("> " + line.strip()) for line in responder.generate.__doc__.split("\n")])
             self.helps.append((responder.name(), help.strip()))
 
         return False
@@ -25,14 +25,11 @@ class HelpResponder(Responder):
         usage: help [command]
         retrieves help information from registered responders
         """
-        message = ""
+        message = "# Help\n"
 
         for name, help in self.helps:
-            print name, help, message
-            message = "%s%s: \n%s\n---\n" % (message, name, help)
+            message = "%s##%s \n%s\n---\n" % (message, name, help)
         
-        print message
-
         return message
 
 class FakeConsumer(object):
@@ -67,8 +64,8 @@ class TestHelpResponder(unittest.TestCase):
 
     def test_on_start(self):
         self.responder.on_start(FakeConsumer([FakeResponder(), FakeEmptyHelpResponder()]))
-        self.assertEquals([('fake', 'My help message\nLook greats from here')], self.responder.helps)
+        self.assertEquals([('fake', '> \n> My help message\n> Look greats from here\n>')], self.responder.helps)
 
     def test_generate(self):
         self.responder.on_start(FakeConsumer([FakeResponder()]))
-        self.assertEquals("fake: \nMy help message\nLook greats from here\n---\n", self.responder.generate("help"))
+        self.assertEquals("# Help\n##fake \n> \n> My help message\n> Look greats from here\n>\n---\n", self.responder.generate("help"))

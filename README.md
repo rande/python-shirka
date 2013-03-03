@@ -28,10 +28,11 @@ Install dependencies
     pip install mocker
     pip install pyopenssl
     pip install python-flowdock
+    pip install markdown
 
 ## Running Tests
 
-    python -m unittest test.py # run all tests
+    python -m unittest test # run all tests
     python -m unittest responders.xkcd # run one test
 
 ## Usage

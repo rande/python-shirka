@@ -18,7 +18,7 @@ class FlowdockWhoisResponder(Responder):
     def generate(self, message):
         """
         usage: whois user
-        retrieve user information from Flowdock API
+        retrieves user information from Flowdock API
         """
         words = message.split(" ")
 

@@ -4,6 +4,8 @@ import twistedhttpstream
 import exceptions
 import threading
 from twisted.internet import reactor
+import markdown
+import unittest
 
 from responders import Responder, Response, StreamResponse
 
@@ -24,21 +26,22 @@ class StreamAssistant(object):
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
-    def __init__(self, name, token, responders):
+    def __init__(self, bot, token, responders, flowdock):
         """consumer(responders)
 
-        name - the bot name
+        bot - the bot 
         token - the user token
         responders - a set of responders
         """
         self.responders = responders
-        self.name = name
+        self.bot = bot
         self.token = token
         self.stream_assistant = StreamAssistant(self)
+        self.flowdock = flowdock
 
     def connectionMade(self):
         for responder in self.responders:
-            self.handle_response(responder.on_start(self))
+            self.handle_response(responder.on_start(self), {'content': 'on_start'})
 
     def connectionFailed(self, why):
         print "cannot connect:", why
@@ -65,8 +68,6 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         #     return
 
         if message['event'] == 'message':
-            # self.flowdock.post("no-reply@ekino.com", "New message from %s" % message['user'], message['content'], "nono")
-
             print "Message: %s" % message
 
             for responder in self.responders:
@@ -80,15 +81,15 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
                 except exceptions.Exception, e:
                     return "\tError while handling message:\n\t %s" % e.message
 
-                self.handle_response(response)
+                self.handle_response(response, message)
 
-    def handle_response(self, response):
+    def handle_response(self, response, message):
         if isinstance(response, StreamResponse):
-            self.stream_assistant.add(response)
+            self.stream_assistant.add(response, message)
         else:
-            self.post(response)
+            self.post(response, message)
 
-    def normalize(self, response):
+    def normalize(self, response, message):
         if response == False:
             return
 
@@ -101,22 +102,54 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
             return r
 
         if not isinstance(response, Response):
-            return Response(response)
+            response = Response(response)
+
+        response.command = message['content']
 
         return response
 
-    def post(self, response):
-        response = self.normalize(response)
+    def markdown(self, content):
+        return markdown.markdown(content,  extensions=['headerid(level=3)', 'nl2br', 'tables'])
+
+    def post(self, response, message):
+        response = self.normalize(response, message)
 
         if response in [False, None]:
             return
 
         print "send response: %s" % response
 
-        r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
-            "content": response.content,
-            "external_user_name": self.name,
-            "tags":  response.tags
-        })
+        if len(response.content) > 100:
+            r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
+                "content": "\t response too long, check the flowdock inbox!",
+                "external_user_name": self.bot.name,
+                "tags":  response.tags
+            })
 
-        print r
+            self.flowdock.post(self.bot.email, "Response to %s" % response.command, self.markdown(response.content) , from_name=self.bot.name)    
+        else:
+            r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
+                "content": response.content,
+                "external_user_name": self.bot.name,
+                "tags":  response.tags
+            })
+
+class TestFlowDockConsumer(unittest.TestCase):
+    def setUp(self):
+        from consumers import Bot
+        # from flowdock import FlowDock
+
+        # f = FlowDock(api_key="fake", app_name='Bot %s' % bot.name, project="Project %s" % flow)
+
+        self.consumer = FlowDockConsumer(Bot("name", "email"), "token", [], None)
+
+    def test_markdown(self):
+        help = "# help\n\n##command \n\nusage: help\n"
+
+        expected ="""\
+<h3 id="help">help</h3>
+<h4 id="command">command</h4>
+<p>usage: help</p>\
+"""
+        self.assertEquals(self.consumer.markdown(help), expected)
+

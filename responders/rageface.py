@@ -31,8 +31,6 @@ class RagefaceResponder(Responder):
         """
         usage: rageface [face] : display the related rageface
                rageface help : display faces available
-
-        retrieve user information from Flowdock API
         """
         words = message.split(" ")
 
