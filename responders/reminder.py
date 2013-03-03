@@ -3,13 +3,13 @@ import requests, json, re, time, threading
 import consumers
 
 class ReminderStreamResponse(StreamResponse):
-    def handle(self, consumer):
-        consumer.post("Roger that!! (reminder set)")
+    def handle(self, request, consumer):
+        consumer.post("Roger that!! (reminder set)", request)
 
-        def remind(consumer, message):
-            consumer.post("Reminder: %s" % message)
+        def remind():
+            consumer.post("Reminder: %s" % self.content, request)
 
-        t = threading.Timer(self.end - time.time(), remind, [consumer, self.content])
+        t = threading.Timer(self.end - time.time(), remind)
         t.run()
 
 class ReminderResponder(Responder):

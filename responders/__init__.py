@@ -30,7 +30,7 @@ class StreamResponse(Response):
     def stop(self):
         self.is_completed = True
 
-    def handle(self, consumer):
+    def handle(self, request, consumer):
         self.is_completed = True
         
 

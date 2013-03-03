@@ -9,18 +9,13 @@ from responders import Responder, Response, StreamResponse
 
 class StreamAssistant(object):
     def __init__(self, consumer):
-        # self.responses = []
         self.consumer = consumer
 
-    def add(self, response):
-        # self.responses.append(response)
-        self.start(response)
-
-    def start(self, response):
-        def start_responder(response, consumer):
-            response.handle(consumer)
+    def add(self, response, request):
+        def start_responder(response, request, consumer):
+            response.handle(request, consumer)
         
-        reactor.callInThread(start_responder, response, self.consumer)
+        reactor.callInThread(start_responder, response, request, self.consumer)
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
@@ -56,22 +51,20 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
             return
 
         if request.type == 'message':
-            print "Request: %s" % request
+            print "<<< Request: %s" % request
 
             for responder in self.responders:
                 if not responder.support(request):
                     continue
 
-                print "Found responder: %s" % responder
+                print "    Found responder: %s" % responder
 
                 try:
                     response = responder.generate(request)
                 except exceptions.Exception, e:
-                    print "\tError while handling message:\n\t %s" % e.message
+                    print "!!! Error while handling message:\n\t %s" % e.message
 
                     return
-
-                print response
 
                 self.handle_response(response, request)
 
@@ -109,7 +102,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         if response in [False, None]:
             return
 
-        print "Response: %s" % response
+        print ">>> Response: %s" % response
 
         if len(response.content) > 300:
             r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
