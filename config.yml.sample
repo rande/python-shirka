@@ -1,0 +1,12 @@
+bot:
+    name:  MyBot
+    email: no-reply@mybot.com
+
+channels:
+    test:
+        enabled: true
+        flowdock:
+            organisation: test
+            flow: {name: test, token: FLOW TOKEN }
+            user: {name: rande, token: USER TOKEN }
+
