@@ -17,7 +17,6 @@ class Response(object):
     def __str__(self):
         return self.content
 
-
 class StreamResponse(Response):
     def __init__(self, content):
         self.is_completed = False
@@ -40,3 +39,4 @@ from ascii import AsciiResponder
 from ninegag import NineGagResponder
 from link import LinkResponder
 from reminder import ReminderResponder
+from status import StatusResponder
