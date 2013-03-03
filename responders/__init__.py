@@ -46,3 +46,4 @@ from link import LinkResponder
 from reminder import ReminderResponder
 from status import StatusResponder
 from help import HelpResponder
+from remote import RemoteResponder

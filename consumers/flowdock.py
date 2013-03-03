@@ -4,6 +4,7 @@ from twisted.internet import reactor
 from consumers import Request, User
 import markdown
 import unittest
+import traceback
 
 from responders import Responder, Response, StreamResponse
 
@@ -41,7 +42,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         reactor.stop()
 
     def create_request(self, message):
-        return Request(message['content'], User(None, None, message['user']), message['event'], 'flowdock')
+        return Request(message['content'], User(None, None, int(message['user'])), message['event'], 'flowdock')
 
     def messageReceived(self, message):
 
@@ -64,7 +65,8 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
                 except exceptions.Exception, e:
                     print "!!! Error while handling message:\n\t %s" % e.message
 
-                    return
+                    return 
+                    # raise e
 
                 self.handle_response(response, request)
 
@@ -105,7 +107,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         print ">>> Response: %s" % response
 
         if len(response.content) > 300:
-            r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
+            requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
                 "content": "\t response too long, check the flowdock inbox!",
                 "external_user_name": self.bot.name,
                 "tags":  response.tags
@@ -113,7 +115,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
             self.flowdock.post(self.bot.email, "Response to %s" % response.command, self.markdown(response.content) , from_name=self.bot.name)    
         else:
-            r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
+            requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
                 "content": response.content,
                 "external_user_name": self.bot.name,
                 "tags":  response.tags
