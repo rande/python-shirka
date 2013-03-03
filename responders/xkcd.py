@@ -5,10 +5,14 @@ import unittest
 import exceptions
 
 class XkcdResponder(Responder):
-    def support(self, message):
-        return message[0:4] == 'xkcd'
-
+    def name(self):
+        return "xkcd"
+        
     def generate(self, message):
+        """
+        usage: xkcd integer
+        retrieve xkcd image from the provided integer
+        """
 
         try:
             r = requests.get('http://xkcd.com/%s/info.0.json' % message[5:]).json()

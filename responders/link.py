@@ -8,11 +8,13 @@ class LinkResponder(Responder):
 
         super(LinkResponder, self).__init__()
 
+    def name(self):
+        return "link"
+
     def support(self, message):
         return True
 
     def generate(self, message):
-
         origin = message
 
         for ereg, replace in self.links:

@@ -17,10 +17,15 @@ class ReminderResponder(Responder):
         self.pattern = re.compile("")
         super(ReminderResponder, self).__init__()
 
-    def support(self, message):
-        return message[0:8] == 'reminder'
+    def name(self):
+        return 'reminder'
 
     def generate(self, message):
+        """
+        usage: reminder time message
+        store a reminder, time must be integer + unit : 15s or 15m. 
+        valid unit: s (seconde), m (minute) and h (hour)
+        """
         try:
             cmd, format, message = message.split(" ", 2)
         except Exception, e:

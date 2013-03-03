@@ -5,10 +5,14 @@ import unittest
 
 class WatResponder(Responder):
 
-    def support(self, message):
-        return message[0:4] == 'wat'
+    def name(self):
+        return 'wat'
 
     def generate(self, message):
+        """
+        usage: wat
+        return a wat image
+        """
         r = requests.get('http://watme.herokuapp.com/random').json()
 
         return r['wat']

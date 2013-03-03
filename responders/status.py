@@ -43,13 +43,17 @@ MESSAGES = [
 ]
 
 class StatusResponder(Responder):
-    def support(self, message):
-        return message[:6] == 'status'
+    def name(self):
+        return 'status'
 
     def on_start(self, consumer):
         return "\t%s" % choice(STATUS)
 
     def generate(self, message):
+        """
+        usage: status
+        return a random status message
+        """
         return "\t%s" % choice(MESSAGES)
 
 class TestStatusResponder(unittest.TestCase):

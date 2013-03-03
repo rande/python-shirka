@@ -9,6 +9,10 @@ class Responder(object):
     def on_start(self, consumer):
         return False
 
+    def support(self, message):
+        return message[0:len(self.name())] == self.name()
+
+
 class Response(object):
     def __init__(self, content):
         self.content = content
@@ -40,3 +44,4 @@ from ninegag import NineGagResponder
 from link import LinkResponder
 from reminder import ReminderResponder
 from status import StatusResponder
+from help import HelpResponder

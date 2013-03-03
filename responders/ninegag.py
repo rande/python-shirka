@@ -4,10 +4,14 @@ import requests
 import unittest
 
 class NineGagResponder(Responder):  
-    def support(self, message):
-        return message[0:4] == '9gag' and len(message) == 4
+    def name(self):
+        return '9gag'
 
     def generate(self, message):
+        """
+        usage: 9gag
+        retrieve a random 9gag image
+        """
         section = requests.get("http://infinigag.eu01.aws.af.cm/?section=hot").json()
 
         return section['images'][randint(0, len(section['images']))]['image']['small']

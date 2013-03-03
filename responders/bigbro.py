@@ -2,10 +2,14 @@ from responders import Responder
 import unittest
 
 class BigbroResponder(Responder):
-    def support(self, message):
-        return message[0:2] == 'pt'
+    def name(self):
+        return 'pt'
 
     def generate(self, message):
+        """
+        usage: pt user message
+        Generate a point to the provided user
+        """
         words = message.split(" ")
 
         if words[1] == 'help':

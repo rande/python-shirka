@@ -3,11 +3,14 @@ import requests, re
 import unittest
 
 class AsciiResponder(Responder):
-
-    def support(self, message):
-        return message[0:5] == 'ascii'
+    def name(self):
+        return 'ascii'
 
     def generate(self, message):
+        """
+        usage: ascii message
+        Generate an ascii art from the provided message
+        """
         payload = {'s': message[6:]}
         ascii = requests.get('http://asciime.heroku.com/generate_ascii', params=payload).text
         

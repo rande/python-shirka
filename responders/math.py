@@ -4,11 +4,14 @@ import exceptions
 import unittest
 
 class MathResponder(Responder):
-    def support(self, message):
-        return message[0:4] == 'math'
+    def name(self):
+        return 'math'
 
     def generate(self, message):
-
+        """
+        usage: math operations
+        Computes operations
+        """
         try:
             return "\t%s\n\t=> %s" % (message[5:], float(parse_expr(message[5:])))
         except exceptions.Exception, e:

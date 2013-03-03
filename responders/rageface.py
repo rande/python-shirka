@@ -24,10 +24,16 @@ class RagefaceResponder(Responder):
         "win": "http://fuuu.us/188.png",
     }
 
-    def support(self, message):
-        return message[0:4] == 'face'
+    def name(self):
+        return 'face'
 
     def generate(self, message):
+        """
+        usage: rageface [face] : display the related rageface
+               rageface help : display faces available
+
+        retrieve user information from Flowdock API
+        """
         words = message.split(" ")
 
         if len(words) < 2:

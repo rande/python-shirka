@@ -54,11 +54,15 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         return response
 
     def messageReceived(self, message):
-        if u'from' in message['content'] and message['content']['from']['name'] == self.name:
+
+        if 'external_user_name' in message:
             return
 
-        if 'external_user_name' in message and message['external_user_name'] == self.name:
-            return
+        # if u'from' in message['content'] and message['content']['from']['name'] == self.name:
+        #     return
+
+        # if 'external_user_name' in message and message['external_user_name'] == self.name:
+        #     return
 
         if message['event'] == 'message':
             # self.flowdock.post("no-reply@ekino.com", "New message from %s" % message['user'], message['content'], "nono")

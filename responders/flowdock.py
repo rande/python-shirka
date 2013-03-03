@@ -12,10 +12,14 @@ class FlowdockWhoisResponder(Responder):
         self.flow = flow
         self.token = token
 
-    def support(self, message):
-        return message[0:5] == 'whois'
+    def name(self):
+        return 'whois'
 
     def generate(self, message):
+        """
+        usage: whois user
+        retrieve user information from Flowdock API
+        """
         words = message.split(" ")
 
         user = False
