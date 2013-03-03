@@ -37,9 +37,8 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         self.stream_assistant = StreamAssistant(self)
 
     def connectionMade(self):
-        self.post({
-            'content': "\tHello, I am a bot! (dev mode)\n\tYou can improve my soul here: https://github.com/rande/nono-le-robot !",
-        })
+        for responder in self.responders:
+            self.handle_response(responder.on_start(self))
 
     def connectionFailed(self, why):
         print "cannot connect:", why
@@ -77,10 +76,13 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
                 except exceptions.Exception, e:
                     return "\tError while handling message:\n\t %s" % e.message
 
-                if isinstance(response, StreamResponse):
-                    self.stream_assistant.add(response)
-                else:
-                    self.post(response)
+                self.handle_response(response)
+
+    def handle_response(self, response):
+        if isinstance(response, StreamResponse):
+            self.stream_assistant.add(response)
+        else:
+            self.post(response)
 
     def normalize(self, response):
         if response == False:

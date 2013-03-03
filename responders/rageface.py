@@ -58,3 +58,8 @@ class TestRagefaceResponder(unittest.TestCase):
 
     def test_valid(self):
         self.assertEquals(self.responder.generate("face win"), "http://fuuu.us/188.png")
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))
+
+        

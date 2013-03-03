@@ -72,3 +72,7 @@ class TestReminderResponder(unittest.TestCase):
         response = self.responder.generate("reminder 0s see raph about webservices")
         self.assertIsInstance(response, ReminderStreamResponse)
         self.assertIsNotNone(response.end)
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))
+

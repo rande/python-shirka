@@ -37,3 +37,7 @@ class TestBigbroResponder(unittest.TestCase):
 
     def test_valid(self):
         self.assertEquals(self.responder.generate("pt cool rande"), {'content': '\t\t1 point cool pour rande\n', 'tags': ['#bigbro']})
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))
+

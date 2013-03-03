@@ -36,3 +36,6 @@ class TestLinkResponder(unittest.TestCase):
     def test_valid(self):
         self.assertEquals('\tVoir le bug http://bug/NONO-123', self.responder.generate("Voir le bug NONO-123"))
         self.assertEquals('\tVoir le bug http://bug/NONO-123 et http://bug/NONO-124', self.responder.generate("Voir le bug NONO-123 et NONO-124"))
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))

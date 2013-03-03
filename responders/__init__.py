@@ -5,6 +5,9 @@ class Responder(object):
 
     def generate(message):
         pass
+        
+    def on_start(self, consumer):
+        return False
 
 class Response(object):
     def __init__(self, content):

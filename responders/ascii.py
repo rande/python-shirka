@@ -23,3 +23,6 @@ class TestAsciiResponder(unittest.TestCase):
 
     def test_valid(self):
         self.assertIsNotNone(self.responder.generate("wat"))
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))

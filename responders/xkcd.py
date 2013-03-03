@@ -30,3 +30,6 @@ class TestXkcdResponder(unittest.TestCase):
 
     def test_invalid(self):
         self.assertFalse(self.responder.generate("xkcd fake"))
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))

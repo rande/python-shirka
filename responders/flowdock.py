@@ -45,3 +45,7 @@ class TestFlowdockWhoisResponder(unittest.TestCase):
     def test_support(self):
         self.assertTrue(self.responder.support("whois"))
         self.assertFalse(self.responder.support("fuu"))
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))
+

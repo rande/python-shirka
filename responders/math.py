@@ -24,3 +24,6 @@ class TestMathResponder(unittest.TestCase):
 
     def test_valid(self):
         self.assertEquals(self.responder.generate("math 1 + 1"), "\t1 + 1\n\t=> 2.0")
+
+    def test_on_start(self):
+        self.assertFalse(self.responder.on_start(False))
