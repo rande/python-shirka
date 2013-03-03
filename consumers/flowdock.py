@@ -3,6 +3,7 @@ import requests
 import twistedhttpstream
 import exceptions
 import threading
+from twisted.internet import reactor
 
 from responders import Responder, Response, StreamResponse
 
@@ -16,15 +17,10 @@ class StreamAssistant(object):
         self.start(response)
 
     def start(self, response):
-
-        print "Start %s : " % response
-
         def start_responder(response, consumer):
             response.handle(consumer)
-                
-        t = threading.Thread(target=start_responder, args=(response, self.consumer))
-        t.run()
-
+        
+        reactor.callInThread(start_responder, response, self.consumer)
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
