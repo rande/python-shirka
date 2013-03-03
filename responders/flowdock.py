@@ -1,5 +1,5 @@
 from responders import Responder
-import unittest
+import consumers
 import requests
 
 class FlowdockWhoisResponder(Responder):
@@ -15,12 +15,12 @@ class FlowdockWhoisResponder(Responder):
     def name(self):
         return 'whois'
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: whois user
         retrieves user information from Flowdock API
         """
-        words = message.split(" ")
+        words = request.content.split(" ")
 
         user = False
         if not words[1].isdigit():
@@ -42,7 +42,7 @@ class FlowdockWhoisResponder(Responder):
         return False
         
 
-class TestFlowdockWhoisResponder(unittest.TestCase):
+class TestFlowdockWhoisResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = FlowdockWhoisResponder('orga', 'flow', 'token')
 

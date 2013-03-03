@@ -1,5 +1,5 @@
 from responders import Responder
-import unittest
+import consumers
 from random import choice
 
 
@@ -49,14 +49,14 @@ class StatusResponder(Responder):
     def on_start(self, consumer):
         return "\t%s" % choice(STATUS)
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: status
         return a random status message
         """
         return "\t%s" % choice(MESSAGES)
 
-class TestStatusResponder(unittest.TestCase):
+class TestStatusResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = StatusResponder()
 
@@ -65,4 +65,4 @@ class TestStatusResponder(unittest.TestCase):
         self.assertFalse(self.responder.support("fuu"))
 
     def test_valid(self):
-        self.assertIsNotNone(self.responder.generate("status"))
+        self.assertIsNotNone(self.generate("status"))

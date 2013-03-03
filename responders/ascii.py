@@ -1,22 +1,22 @@
 from responders import Responder
+import consumers
 import requests, re
-import unittest
 
 class AsciiResponder(Responder):
     def name(self):
         return 'ascii'
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: ascii message
         Generate an ascii art from the provided message
         """
-        payload = {'s': message[6:]}
+        payload = {'s': request[6:]}
         ascii = requests.get('http://asciime.heroku.com/generate_ascii', params=payload).text
         
         return re.sub('^|\n', '\n\t', ascii)
 
-class TestAsciiResponder(unittest.TestCase):
+class TestAsciiResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = AsciiResponder()
 
@@ -25,7 +25,7 @@ class TestAsciiResponder(unittest.TestCase):
         self.assertFalse(self.responder.support("fuu"))
 
     def test_valid(self):
-        self.assertIsNotNone(self.responder.generate("wat"))
+        self.assertIsNotNone(self.generate("ascii wat"))
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

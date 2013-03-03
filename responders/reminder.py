@@ -1,5 +1,6 @@
 from responders import Responder, StreamResponse
-import requests, json, unittest, re, time, threading
+import requests, json, re, time, threading
+import consumers
 
 class ReminderStreamResponse(StreamResponse):
     def handle(self, consumer):
@@ -20,14 +21,14 @@ class ReminderResponder(Responder):
     def name(self):
         return 'reminder'
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: reminder time message
         store a reminder, time must be integer + unit : 15s or 15m. 
         valid unit: s (seconde), m (minute) and h (hour)
         """
         try:
-            cmd, format, message = message.split(" ", 2)
+            cmd, format, message = request.content.split(" ", 2)
         except Exception, e:
             return False
         
@@ -59,7 +60,7 @@ class ReminderResponder(Responder):
 
         return False
 
-class TestReminderResponder(unittest.TestCase):
+class TestReminderResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = ReminderResponder()
 
@@ -68,13 +69,13 @@ class TestReminderResponder(unittest.TestCase):
         self.assertFalse(self.responder.support("fuu"))
 
     def test_invalid_count(self):
-        self.assertFalse(self.responder.generate("reminder"))
+        self.assertFalse(self.generate("reminder"))
 
     def test_invalid_time(self):
-        self.assertFalse(self.responder.generate("reminder 15j see raph about webservices"))
+        self.assertFalse(self.generate("reminder 15j see raph about webservices"))
 
     def test_valid(self):
-        response = self.responder.generate("reminder 0s see raph about webservices")
+        response = self.generate("reminder 0s see raph about webservices")
         self.assertIsInstance(response, ReminderStreamResponse)
         self.assertIsNotNone(response.end)
 

@@ -1,9 +1,7 @@
 
-import requests
-import twistedhttpstream
-import exceptions
-import threading
+import requests, twistedhttpstream, exceptions
 from twisted.internet import reactor
+from consumers import Request, User
 import markdown
 import unittest
 
@@ -41,55 +39,49 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
     def connectionMade(self):
         for responder in self.responders:
-            self.handle_response(responder.on_start(self), {'content': 'on_start'})
+            self.handle_response(responder.on_start(self), Request('on_start', User(None, None, 0), 'init', 'flowdock'))
 
     def connectionFailed(self, why):
         print "cannot connect:", why
         reactor.stop()
 
-    def normalize(self, response):
-        if response == False:
-            return False
-
-        if not isinstance(response, (Response)):
-            response = Response(response)
-
-        return response
+    def create_request(self, message):
+        return Request(message['content'], User(None, None, message['user']), message['event'], 'flowdock')
 
     def messageReceived(self, message):
 
-        if 'external_user_name' in message:
+        request = self.create_request(message)
+
+        if request.user.id == 0:
             return
 
-        # if u'from' in message['content'] and message['content']['from']['name'] == self.name:
-        #     return
-
-        # if 'external_user_name' in message and message['external_user_name'] == self.name:
-        #     return
-
-        if message['event'] == 'message':
-            print "Message: %s" % message
+        if request.type == 'message':
+            print "Request: %s" % request
 
             for responder in self.responders:
-                if not responder.support(message['content']):
+                if not responder.support(request):
                     continue
 
                 print "Found responder: %s" % responder
 
                 try:
-                    response = responder.generate(message['content'])
+                    response = responder.generate(request)
                 except exceptions.Exception, e:
-                    return "\tError while handling message:\n\t %s" % e.message
+                    print "\tError while handling message:\n\t %s" % e.message
 
-                self.handle_response(response, message)
+                    return
 
-    def handle_response(self, response, message):
+                print response
+
+                self.handle_response(response, request)
+
+    def handle_response(self, response, request):
         if isinstance(response, StreamResponse):
-            self.stream_assistant.add(response, message)
+            self.stream_assistant.add(response, request)
         else:
-            self.post(response, message)
+            self.post(response, request)
 
-    def normalize(self, response, message):
+    def normalize(self, response, request):
         if response == False:
             return
 
@@ -99,27 +91,27 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
             if 'tags' in response:
                 r.tags = response['tags']
 
-            return r
+            response = r
 
         if not isinstance(response, Response):
             response = Response(response)
 
-        response.command = message['content']
+        response.command = request.content
 
         return response
 
     def markdown(self, content):
         return markdown.markdown(content,  extensions=['headerid(level=3)', 'nl2br', 'tables'])
 
-    def post(self, response, message):
-        response = self.normalize(response, message)
+    def post(self, response, request):
+        response = self.normalize(response, request)
 
         if response in [False, None]:
             return
 
-        print "send response: %s" % response
+        print "Response: %s" % response
 
-        if len(response.content) > 100:
+        if len(response.content) > 300:
             r = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
                 "content": "\t response too long, check the flowdock inbox!",
                 "external_user_name": self.bot.name,

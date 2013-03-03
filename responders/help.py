@@ -1,6 +1,5 @@
 from responders import Responder
-import unittest
-# from inspect
+import consumers
 
 class HelpResponder(Responder):
 
@@ -20,7 +19,7 @@ class HelpResponder(Responder):
 
         return False
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: help [command]
         retrieves help information from registered responders
@@ -54,7 +53,7 @@ class FakeEmptyHelpResponder(Responder):
     def generate(self, message):
         return "salut"
 
-class TestHelpResponder(unittest.TestCase):
+class TestHelpResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = HelpResponder()
 
@@ -68,4 +67,4 @@ class TestHelpResponder(unittest.TestCase):
 
     def test_generate(self):
         self.responder.on_start(FakeConsumer([FakeResponder()]))
-        self.assertEquals("# Help\n##fake \n> \n> My help message\n> Look greats from here\n>\n---\n", self.responder.generate("help"))
+        self.assertEquals("# Help\n##fake \n> \n> My help message\n> Look greats from here\n>\n---\n", self.generate("help"))

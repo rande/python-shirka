@@ -1,13 +1,13 @@
 from responders import Responder
 from random import randint
 import requests
-import unittest
+import consumers
 
 class NineGagResponder(Responder):  
     def name(self):
         return '9gag'
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: 9gag
         retrieves a random 9gag image
@@ -16,7 +16,7 @@ class NineGagResponder(Responder):
 
         return section['images'][randint(0, len(section['images']))]['image']['small']
 
-class TestNineGagResponder(unittest.TestCase):
+class TestNineGagResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = NineGagResponder()
 
@@ -25,7 +25,7 @@ class TestNineGagResponder(unittest.TestCase):
         self.assertFalse(self.responder.support("fuu"))
 
     def test_valid(self):
-        self.assertIsNotNone(self.responder.generate("9gag"))
+        self.assertIsNotNone(self.generate("9gag"))
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

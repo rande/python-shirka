@@ -1,5 +1,5 @@
 from responders import Responder
-import unittest
+import consumers
 import re
 
 class LinkResponder(Responder):
@@ -14,18 +14,18 @@ class LinkResponder(Responder):
     def support(self, message):
         return True
 
-    def generate(self, message):
-        origin = message
+    def generate(self, request):
+        origin = request.content
 
         for ereg, replace in self.links:
-             message = re.sub(ereg, replace, message)
+             message = re.sub(ereg, replace, request.content)
 
         if message == origin:
             return False
             
         return "\t%s" % message
 
-class TestLinkResponder(unittest.TestCase):
+class TestLinkResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = LinkResponder([
             (r'( |#)NONO-([0-9]*)', r' http://bug/NONO-\2'),
@@ -36,8 +36,8 @@ class TestLinkResponder(unittest.TestCase):
         self.assertTrue(self.responder.support("fuu"))
 
     def test_valid(self):
-        self.assertEquals('\tVoir le bug http://bug/NONO-123', self.responder.generate("Voir le bug NONO-123"))
-        self.assertEquals('\tVoir le bug http://bug/NONO-123 et http://bug/NONO-124', self.responder.generate("Voir le bug NONO-123 et NONO-124"))
+        self.assertEquals('\tVoir le bug http://bug/NONO-123', self.generate("Voir le bug NONO-123"))
+        self.assertEquals('\tVoir le bug http://bug/NONO-123 et http://bug/NONO-124', self.generate("Voir le bug NONO-123 et NONO-124"))
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

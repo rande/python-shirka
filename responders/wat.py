@@ -1,14 +1,14 @@
 from responders import Responder
 import requests
 import json
-import unittest
+import consumers
 
 class WatResponder(Responder):
 
     def name(self):
         return 'wat'
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: wat
         return a wat image
@@ -17,7 +17,7 @@ class WatResponder(Responder):
 
         return r['wat']
 
-class TestWatResponder(unittest.TestCase):
+class TestWatResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = WatResponder()
 
@@ -26,7 +26,7 @@ class TestWatResponder(unittest.TestCase):
         self.assertFalse(self.responder.support("fuu"))
 
     def test_valid(self):
-        self.assertIsNotNone(self.responder.generate("wat"))
+        self.assertIsNotNone(self.generate("wat"))
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

@@ -1,6 +1,5 @@
 from responders import Responder
-
-import unittest
+import consumers
 
 class RagefaceResponder(Responder):
     IMG = {
@@ -27,12 +26,12 @@ class RagefaceResponder(Responder):
     def name(self):
         return 'face'
 
-    def generate(self, message):
+    def generate(self, request):
         """
         usage: rageface [face] : display the related rageface
                rageface help : display faces available
         """
-        words = message.split(" ")
+        words = request.content.split(" ")
 
         if len(words) < 2:
             return False
@@ -46,7 +45,7 @@ class RagefaceResponder(Responder):
         return False
 
 
-class TestRagefaceResponder(unittest.TestCase):
+class TestRagefaceResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = RagefaceResponder()
 
@@ -55,13 +54,13 @@ class TestRagefaceResponder(unittest.TestCase):
         self.assertFalse(self.responder.support("fuu"))
 
     def test_incomplete_command(self):
-        self.assertFalse(self.responder.generate("face"))
+        self.assertFalse(self.generate("face"))
 
     def test_help(self):
-        self.assertIsNotNone(self.responder.generate("face help"))
+        self.assertIsNotNone(self.generate("face help"))
 
     def test_valid(self):
-        self.assertEquals(self.responder.generate("face win"), "http://fuuu.us/188.png")
+        self.assertEquals(self.generate("face win"), "http://fuuu.us/188.png")
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))
