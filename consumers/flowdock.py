@@ -1,5 +1,6 @@
+# vim: set fileencoding=utf-8 :
 
-import requests, twistedhttpstream, exceptions
+import requests, twistedhttpstream, exceptions, logging
 from twisted.internet import reactor
 from consumers import Request, User
 import markdown
@@ -32,6 +33,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         self.token = token
         self.stream_assistant = StreamAssistant(self)
         self.flowdock = flowdock
+        self.logger = logging.getLogger('consumers.flowdock')
 
     def connectionMade(self):
         for responder in self.responders:
@@ -52,18 +54,18 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
             return
 
         if request.type == 'message':
-            print u"<<< Request: %s" % request
+            self.logger.debug("<<< Request: %s" % request.content)
 
             for responder in self.responders:
                 if not responder.support(request):
                     continue
 
-                print u"    Found responder: %s" % responder
+                self.logger.debug("    Found responder: %s" % responder)
 
                 try:
                     response = responder.generate(request)
                 except exceptions.Exception, e:
-                    print "!!! Error while handling message:\n\t %s" % e.message
+                    self.logger.warning("!!! Error while handling message:\n\t %s" % e.message)
 
                     return 
                     # raise e
@@ -104,7 +106,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         if response in [False, None]:
             return
 
-        print u">>> Response: %s" % response
+        self.logger.debug(">>> Response: %s" % response)
 
         if len(response.content) > 300:
             requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {

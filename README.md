@@ -34,14 +34,14 @@ Install dependencies
 
 ## Running Tests
 
-    python -m unittest test # run all tests
+    python tests.py # run all tests
     python -m unittest responders.xkcd # run one test
 
 ## Usage
 
 ```python
 
-import twistedhttpstream
+import twistedhttpstream, logging
 from twisted.internet import reactor
 import yaml
 
@@ -54,11 +54,11 @@ from responders import  (
     StatusResponder, HelpResponder
 )
 
+logging.basicConfig(level=logging.DEBUG)
+
 from consumers import FlowDockConsumer, Bot
 
 config = yaml.load(file('config.yml', 'r'))
-
-print config
 
 bot = Bot(config['bot']['name'], config['bot']['email'])
 
