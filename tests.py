@@ -5,13 +5,16 @@ import unittest
 def load_tests(loader, tests, pattern):
     suite = unittest.TestSuite()
 
-    for path in glob.glob("*/*.pyc"):
-        path = path.replace("/",".")[:-4]
+    for path in glob.glob("*/*.py"):
+        path = path.replace("/",".")[:-3]
 
-        __import__(path)
-        mod = sys.modules[path]
+        try:
+            __import__(path)
+            mod = sys.modules[path]
 
-        suite.addTests(loader.loadTestsFromModule(mod))
+            suite.addTests(loader.loadTestsFromModule(mod))
+        except ImportError, e:
+            pass
 
     return suite
 
