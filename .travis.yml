@@ -4,16 +4,16 @@ python:
 
 # command to install dependencies
 install:
-  - pip install -q twisted
-  - pip install -q twistedhttpstream
-  - pip install -q requests
-  - pip install -q sympy
-  - pip install -q mocker
-  - pip install -q Markdown
-  - pip install -q PyYAML
-  - pip install -q pyOpenSSL
-  - pip install -q python-flowdock
+  - pip install -q twisted --use-mirrors
+  - pip install -q twistedhttpstream --use-mirrors
+  - pip install -q requests --use-mirrors
+  - pip install -q sympy --use-mirrors
+  - pip install -q mocker --use-mirrors
+  - pip install -q Markdown --use-mirrors
+  - pip install -q PyYAML --use-mirrors
+  - pip install -q pyOpenSSL --use-mirrors
+  - pip install -q python-flowdock --use-mirrors
 
 
 # command to run tests
-script: python tests.py
+script: source ~/virtualenv/python2.7/bin/activate && python tests.py
