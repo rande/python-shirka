@@ -52,13 +52,13 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
             return
 
         if request.type == 'message':
-            print "<<< Request: %s" % request
+            print u"<<< Request: %s" % request
 
             for responder in self.responders:
                 if not responder.support(request):
                     continue
 
-                print "    Found responder: %s" % responder
+                print u"    Found responder: %s" % responder
 
                 try:
                     response = responder.generate(request)
@@ -104,7 +104,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         if response in [False, None]:
             return
 
-        print ">>> Response: %s" % response
+        print u">>> Response: %s" % response
 
         if len(response.content) > 300:
             requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
