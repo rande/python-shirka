@@ -4,11 +4,16 @@ python:
 
 # command to install dependencies
 install:
-  -  pip install -q twisted
-  -  pip install -q twistedhttpstream
-  -  pip install -q requests
-  -  pip install -q sympy
-  -  pip install -q mocker
+  - pip install -q twisted
+  - pip install -q twistedhttpstream
+  - pip install -q requests
+  - pip install -q sympy
+  - pip install -q mocker
+  - pip install -q Markdown
+  - pip install -q PyYAML
+  - pip install -q pyOpenSSL
+  - pip install -q python-flowdock
+
 
 # command to run tests
-script: python -m unittest test
+script: python tests.py
