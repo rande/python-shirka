@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8 :
+
 from responders import Responder
 from random import randint
 import requests

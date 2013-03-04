@@ -1,3 +1,4 @@
+# vim: set fileencoding=utf-8 :
 from responders import Responder, StreamResponse
 import consumers
 import paramiko

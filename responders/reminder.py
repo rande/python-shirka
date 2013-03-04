@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8 :
+
 from responders import Responder, StreamResponse
 import requests, json, re, time, threading
 import consumers

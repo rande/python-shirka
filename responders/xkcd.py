@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8 :
+
 from responders import Responder
 import requests
 import consumers

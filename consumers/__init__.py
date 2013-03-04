@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8 :
+
 import unittest
 
 class Bot(object):
@@ -22,6 +24,9 @@ class Request(object):
         self.provider = provider
 
     def __str__(self):
+        return self.content
+
+    def __unicode__(self):
         return self.content
 
     def __repr__(self):

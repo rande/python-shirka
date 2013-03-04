@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8 :
+
 from responders import Responder
 from sympy.parsing.sympy_parser import parse_expr
 import exceptions
