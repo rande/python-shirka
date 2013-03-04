@@ -15,7 +15,7 @@ class MathResponder(Responder):
         Computes operations
         """
         try:
-            return "\t%s\n\t=> %s" % (request[5:], float(parse_expr(request[5:])))
+            return "%s\n=> %s" % (request[5:], float(parse_expr(request[5:])))
         except exceptions.Exception, e:
             return "Parse error: %s" % e.message
 
@@ -28,7 +28,7 @@ class TestMathResponder(consumers.BaseTestCase):
         self.assertFalse(self.responder.support("fuu"))
 
     def test_valid(self):
-        self.assertEquals(self.generate("math 1 + 1"), "\t1 + 1\n\t=> 2.0")
+        self.assertEquals(self.generate("math 1 + 1"), "1 + 1\n=> 2.0")
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

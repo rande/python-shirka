@@ -49,14 +49,14 @@ class StatusResponder(Responder):
         return 'status'
 
     def on_start(self, consumer):
-        return "\t%s" % choice(STATUS)
+        return "%s" % choice(STATUS)
 
     def generate(self, request):
         """
         usage: status
         return a random status message
         """
-        return "\t%s" % choice(MESSAGES)
+        return "%s" % choice(MESSAGES)
 
 class TestStatusResponder(consumers.BaseTestCase):
     def setUp(self):

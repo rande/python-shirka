@@ -21,7 +21,7 @@ class BigbroResponder(Responder):
             return False
 
         return {
-            'content': "\t\t1 point %s pour %s\n" % (words[1], words[2]),
+            'content': "1 point %s pour %s\n" % (words[1], words[2]),
             'tags': ['#bigbro']
         }
 
@@ -42,7 +42,7 @@ class TestBigbroResponder(consumers.BaseTestCase):
         self.assertFalse(self.generate("pt salut"))
 
     def test_valid(self):
-        self.assertEquals(self.generate("pt cool rande"), {'content': '\t\t1 point cool pour rande\n', 'tags': ['#bigbro']})
+        self.assertEquals(self.generate("pt cool rande"), {'content': '1 point cool pour rande\n', 'tags': ['#bigbro']})
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

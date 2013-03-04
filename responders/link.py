@@ -13,24 +13,32 @@ class LinkResponder(Responder):
     def name(self):
         return "link"
 
-    def support(self, message):
+    def support(self, request):
         return True
 
     def generate(self, request):
-        origin = request.content
+        matches = []
 
-        for ereg, replace in self.links:
-             message = re.sub(ereg, replace, request.content)
+        for ereg, sentence in self.links:
+            for result in re.finditer(ereg, request.content):
+                message = sentence
 
-        if message == origin:
-            return False
-            
-        return "\t%s" % message
+                for key in result.groupdict():
+                    message = message.replace(key, result.groupdict()[key])
+
+                if len(message) > 0:
+                    matches.append(message) 
+
+        if len(matches) > 0:
+            return " > " + "\n > ".join(matches)
+
+        return False
 
 class TestLinkResponder(consumers.BaseTestCase):
     def setUp(self):
         self.responder = LinkResponder([
-            (r'( |#)NONO-([0-9]*)', r' http://bug/NONO-\2'),
+            ('( |#|^)NONO-(?P<NUMBER>[0-9]*)', 'http://bug/NONO-NUMBER'),
+            ('(^| |#)(?P<PROJECT>BUG)-(?P<NUMBER>[0-9]*)', 'http://bug.mycompany.com/browse/PROJECT-NUMBER'),
         ])
 
     def test_support(self):
@@ -38,8 +46,9 @@ class TestLinkResponder(consumers.BaseTestCase):
         self.assertTrue(self.responder.support("fuu"))
 
     def test_valid(self):
-        self.assertEquals('\tVoir le bug http://bug/NONO-123', self.generate("Voir le bug NONO-123"))
-        self.assertEquals('\tVoir le bug http://bug/NONO-123 et http://bug/NONO-124', self.generate("Voir le bug NONO-123 et NONO-124"))
+        self.assertEquals(' > http://bug/NONO-123\n > http://bug/NONO-124', self.generate("Voir le bug NONO-123 et NONO-124"))
+        self.assertEquals(' > http://bug/NONO-123', self.generate("Voir le bug NONO-123"))
+        self.assertEquals(' > http://bug.mycompany.com/browse/BUG-123', self.generate("BUG-123"))
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

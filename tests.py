@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8 :
+
 import os.path, sys, glob
 import unittest
 

@@ -3,9 +3,7 @@
 import requests, twistedhttpstream, exceptions, logging
 from twisted.internet import reactor
 from consumers import Request, User
-import markdown
-import unittest
-import traceback
+import markdown, unittest, re
 
 from responders import Responder, Response, StreamResponse
 
@@ -100,6 +98,12 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
     def markdown(self, content):
         return markdown.markdown(content,  extensions=['headerid(level=3)', 'nl2br', 'tables'])
 
+    def format(self, content):
+        if re.match("(http|https)://(.*)\.(gif|jpg|jpeg|png)", content):
+            return content
+
+        return "\t" + "\n\t".join(content.split("\n"))
+
     def post(self, response, request):
         response = self.normalize(response, request)
 
@@ -118,7 +122,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
             self.flowdock.post(self.bot.email, "Response to %s" % response.command, self.markdown(response.content) , from_name=self.bot.name)    
         else:
             requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
-                "content": response.content,
+                "content": self.format(response.content),
                 "external_user_name": self.bot.name,
                 "tags":  response.tags
             })
@@ -142,3 +146,22 @@ class TestFlowDockConsumer(unittest.TestCase):
 """
         self.assertEquals(self.consumer.markdown(help), expected)
 
+    def test_formatter(self):
+        message = """\
+ > Hello!
+ > Bonjour!
+ > Holla!\
+"""
+
+        expected = """\
+\t > Hello!
+\t > Bonjour!
+\t > Holla!\
+"""
+
+        self.assertEquals(self.consumer.format(message), expected)
+        self.assertEquals(self.consumer.format("http://foo/my.png"), "http://foo/my.png")
+        self.assertEquals(self.consumer.format("https://foo/my.png"), "https://foo/my.png")
+        self.assertEquals(self.consumer.format("https://foo/my.tiff"), "\thttps://foo/my.tiff")
+
+        

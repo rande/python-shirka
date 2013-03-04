@@ -51,6 +51,9 @@ class TestRequest(BaseTestCase):
     def test_slice(self):
         self.assertEquals("the", self.request[0:3])
 
-
+    def test_unicode(self):
+        self.request = self.create_request(u"étrange...")
+        self.assertEquals(u"étrange...", u"%s" % self.request)
+        
 
 from flowdock import FlowDockConsumer
