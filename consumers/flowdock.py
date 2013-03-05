@@ -11,11 +11,8 @@ class StreamAssistant(object):
     def __init__(self, consumer):
         self.consumer = consumer
 
-    def add(self, response, request):
-        def start_responder(response, request, consumer):
-            response.handle(request, consumer)
-        
-        reactor.callInThread(start_responder, response, request, self.consumer)
+    def add(self, response, request):       
+        reactor.callInThread(response.handle, request, self.consumer)
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
