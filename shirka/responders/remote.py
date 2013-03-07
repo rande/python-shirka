@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
-from responders import Responder, StreamResponse
-import consumers
+from shirka.responders import Responder, StreamResponse
+from shirka.consumers import BaseTestCase
 import paramiko
 
 class RemoteStreamResponse(StreamResponse):

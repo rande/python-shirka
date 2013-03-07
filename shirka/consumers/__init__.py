@@ -33,6 +33,8 @@ class Request(object):
         return self.content
 
     def __getitem__(self, key):
+        print self.content
+        
         return self.content[key]
 
 

@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
-import consumers
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
 
 class BigbroResponder(Responder):
     def name(self):
@@ -27,7 +27,7 @@ class BigbroResponder(Responder):
 
         return False
 
-class TestBigbroResponder(consumers.BaseTestCase):
+class TestBigbroResponder(BaseTestCase):
     def setUp(self):
         self.responder = BigbroResponder()
 

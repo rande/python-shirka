@@ -1,9 +1,9 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
+from shirka.responders import Responder
 from random import randint
 import requests
-import consumers
+from shirka.consumers import BaseTestCase
 
 class NineGagResponder(Responder):  
     def name(self):
@@ -18,7 +18,7 @@ class NineGagResponder(Responder):
 
         return section['images'][randint(0, len(section['images']))]['image']['small']
 
-class TestNineGagResponder(consumers.BaseTestCase):
+class TestNineGagResponder(BaseTestCase):
     def setUp(self):
         self.responder = NineGagResponder()
 

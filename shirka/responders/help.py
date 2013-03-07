@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
-import consumers
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
 
 class HelpResponder(Responder):
 
@@ -55,7 +55,7 @@ class FakeEmptyHelpResponder(Responder):
     def generate(self, message):
         return "salut"
 
-class TestHelpResponder(consumers.BaseTestCase):
+class TestHelpResponder(BaseTestCase):
     def setUp(self):
         self.responder = HelpResponder()
 

@@ -1,11 +1,12 @@
 # vim: set fileencoding=utf-8 :
 
-import requests, twistedhttpstream, exceptions, logging
-from twisted.internet import reactor
-from consumers import Request, User
-import markdown, unittest, re
+from shirka.consumers import Request, User
+from shirka.responders import Responder, Response, StreamResponse
 
-from responders import Responder, Response, StreamResponse
+from twisted.internet import reactor
+
+import requests, twistedhttpstream, exceptions, logging
+import markdown, unittest, re
 
 class StreamAssistant(object):
     def __init__(self, consumer):
@@ -16,7 +17,7 @@ class StreamAssistant(object):
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
-    def __init__(self, bot, token, responders, flowdock):
+    def __init__(self, bot, token, responders, flowdock, logger=None):
         """consumer(responders)
 
         bot - the bot 
@@ -28,14 +29,17 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         self.token = token
         self.stream_assistant = StreamAssistant(self)
         self.flowdock = flowdock
-        self.logger = logging.getLogger('consumers.flowdock')
+        if not logger:
+            self.logger = logging.getLogger('consumers.flowdock')
+        else:
+            self.logger = logger
 
     def connectionMade(self):
+        self.logger.info("Connection made to flowdock")
         for responder in self.responders:
             self.handle_response(responder.on_start(self), Request('on_start', User(None, None, 0), 'init', 'flowdock'))
 
     def connectionFailed(self, why):
-        print "cannot connect:", why
         reactor.stop()
 
     def create_request(self, message):
@@ -48,7 +52,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         if request.user.id == 0:
             return
 
-        if request.type == 'message':
+        if request.type == 'message' or request.type == 'comment':
             self.logger.debug("<<< Request: %s" % request.content)
 
             for responder in self.responders:
@@ -126,7 +130,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
 class TestFlowDockConsumer(unittest.TestCase):
     def setUp(self):
-        from consumers import Bot
+        from shirka.consumers import Bot
         # from flowdock import FlowDock
 
         # f = FlowDock(api_key="fake", app_name='Bot %s' % bot.name, project="Project %s" % flow)

@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
-import consumers
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
 from random import choice
 
 
@@ -48,8 +48,8 @@ class StatusResponder(Responder):
     def name(self):
         return 'status'
 
-    def on_start(self, consumer):
-        return "%s" % choice(STATUS)
+    # def on_start(self, consumer):
+    #     return "%s" % choice(STATUS)
 
     def generate(self, request):
         """
@@ -58,7 +58,7 @@ class StatusResponder(Responder):
         """
         return "%s" % choice(MESSAGES)
 
-class TestStatusResponder(consumers.BaseTestCase):
+class TestStatusResponder(BaseTestCase):
     def setUp(self):
         self.responder = StatusResponder()
 

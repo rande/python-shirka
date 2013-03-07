@@ -7,7 +7,7 @@ import unittest
 def load_tests(loader, tests, pattern):
     suite = unittest.TestSuite()
 
-    for path in glob.glob("*/*.py"):
+    for path in glob.glob("shirka/*/*.py"):
         path = path.replace("/",".")[:-3]
 
         try:

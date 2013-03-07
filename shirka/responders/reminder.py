@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder, StreamResponse
+from shirka.responders import Responder, StreamResponse
 import requests, json, re, time, threading
-import consumers
+from shirka.consumers import BaseTestCase
 
 class ReminderStreamResponse(StreamResponse):
     def handle(self, request, consumer):
@@ -62,7 +62,7 @@ class ReminderResponder(Responder):
 
         return False
 
-class TestReminderResponder(consumers.BaseTestCase):
+class TestReminderResponder(BaseTestCase):
     def setUp(self):
         self.responder = ReminderResponder()
 

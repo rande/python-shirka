@@ -1,9 +1,11 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
+
 import requests
 import json
-import consumers
+
 
 class WatResponder(Responder):
 
@@ -19,7 +21,7 @@ class WatResponder(Responder):
 
         return r['wat']
 
-class TestWatResponder(consumers.BaseTestCase):
+class TestWatResponder(BaseTestCase):
     def setUp(self):
         self.responder = WatResponder()
 

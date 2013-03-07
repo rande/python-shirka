@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
-import consumers
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
 import requests, re
 
 class AsciiResponder(Responder):
@@ -18,7 +18,7 @@ class AsciiResponder(Responder):
         
         return re.sub('^|\n', '\n\t', ascii)
 
-class TestAsciiResponder(consumers.BaseTestCase):
+class TestAsciiResponder(BaseTestCase):
     def setUp(self):
         self.responder = AsciiResponder()
 

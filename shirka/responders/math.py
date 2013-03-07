@@ -1,9 +1,9 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
+from shirka.responders import Responder
 from sympy.parsing.sympy_parser import parse_expr
 import exceptions
-import consumers
+from shirka.consumers import BaseTestCase
 
 class MathResponder(Responder):
     def name(self):
@@ -19,7 +19,7 @@ class MathResponder(Responder):
         except exceptions.Exception, e:
             return "Parse error: %s" % e.message
 
-class TestMathResponder(consumers.BaseTestCase):
+class TestMathResponder(BaseTestCase):
     def setUp(self):
         self.responder = MathResponder()
 

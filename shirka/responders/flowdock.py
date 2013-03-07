@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
-import consumers
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
 import requests
 
 class FlowdockWhoisResponder(Responder):
@@ -44,7 +44,7 @@ class FlowdockWhoisResponder(Responder):
         return False
         
 
-class TestFlowdockWhoisResponder(consumers.BaseTestCase):
+class TestFlowdockWhoisResponder(BaseTestCase):
     def setUp(self):
         self.responder = FlowdockWhoisResponder('orga', 'flow', 'token')
 

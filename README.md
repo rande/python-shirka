@@ -1,7 +1,7 @@
-Nono le robot
-=============
+Shirka
+======
 
-This is a POC a bot with twisted, mostly a self python learning project
+This a bot based on twisted, mostly a python learning project
 
 ### Consumers
 
@@ -31,6 +31,7 @@ Install dependencies
     pip install markdown
     pip install paramiko
     pip install pyyaml
+    pip install ioc
 
 ## Running Tests
 
@@ -41,62 +42,31 @@ Install dependencies
 
 ```python
 
-import twistedhttpstream, logging
+# vim: set fileencoding=utf-8 :
+
+import twistedhttpstream, yaml, sys, logging
 from twisted.internet import reactor
-import yaml
-
-from flowdock import FlowDock
-
-from responders import  (
-    RagefaceResponder, FlowdockWhoisResponder, MathResponder,  
-    XkcdResponder, WatResponder, BigbroResponder, 
-    NineGagResponder, LinkResponder, ReminderResponder,
-    StatusResponder, HelpResponder
-)
+import ioc
 
 logging.basicConfig(level=logging.DEBUG)
 
-from consumers import FlowDockConsumer, Bot
-
-config = yaml.load(file('config.yml', 'r'))
-
-bot = Bot(config['bot']['name'], config['bot']['email'])
-
-responders_collection = {
-    'test': [
-        StatusResponder(),
-        RagefaceResponder(), 
-        FlowdockWhoisResponder(
-            config['channels']['test']['flowdock']['organisation'], 
-            config['channels']['test']['flowdock']['flow']['name'], 
-            config['channels']['test']['flowdock']['user']['token']
-        ),
-        MathResponder(),
-        XkcdResponder(),
-        WatResponder(),
-        BigbroResponder(),
-        NineGagResponder(),
-        ReminderResponder(),
-        HelpResponder(),
-    ]
-}
+container = ioc.build([
+    'config.yml',
+])
 
 if __name__ == "__main__":
-    for flow, responders in responders_collection.iteritems():
-        channel_config = config['channels'][flow]
 
-        if not config['channels'][flow]['enabled']:
-            continue
-
-        url   = "https://stream.flowdock.com/flows/%s/%s" % (channel_config['flowdock']['organisation'], flow)
-
-        f = FlowDock(api_key=channel_config['flowdock']['flow']['token'], app_name='Bot %s' % bot.name, project="Project %s" % flow)
-
+    for flow in container.parameters['consumers']:
         twistedhttpstream.stream(
-            reactor, url, FlowDockConsumer(bot, channel_config['flowdock']['flow']['token'], responders, f), username=channel_config['flowdock']['user']['token'], password=""
+            reactor, 
+            "https://stream.flowdock.com/flows/%s/%s" % (container.parameters["flowdock.%s.organisation" % flow], flow), 
+            container.get("consumer.%s.flowdock" % flow), 
+            username=container.parameters["flowdock.%s.user.token" % flow], 
+            password=""
         )
     
 
     reactor.run()
+
 
 ```

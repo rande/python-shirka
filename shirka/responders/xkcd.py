@@ -1,8 +1,9 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
+
 import requests
-import consumers
 import exceptions
 
 class XkcdResponder(Responder):
@@ -21,7 +22,7 @@ class XkcdResponder(Responder):
 
         return r['img']
 
-class TestXkcdResponder(consumers.BaseTestCase):
+class TestXkcdResponder(BaseTestCase):
     def setUp(self):
         self.responder = XkcdResponder()
 

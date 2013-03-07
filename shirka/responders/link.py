@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
-import consumers
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
 import re
 
 class LinkResponder(Responder):
@@ -34,7 +34,7 @@ class LinkResponder(Responder):
 
         return False
 
-class TestLinkResponder(consumers.BaseTestCase):
+class TestLinkResponder(BaseTestCase):
     def setUp(self):
         self.responder = LinkResponder([
             ('( |#|^)NONO-(?P<NUMBER>[0-9]*)', 'http://bug/NONO-NUMBER'),

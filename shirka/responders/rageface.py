@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
-from responders import Responder
-import consumers
+from shirka.responders import Responder
+from shirka.consumers import BaseTestCase
 
 class RagefaceResponder(Responder):
     IMG = {
@@ -47,7 +47,7 @@ class RagefaceResponder(Responder):
         return False
 
 
-class TestRagefaceResponder(consumers.BaseTestCase):
+class TestRagefaceResponder(BaseTestCase):
     def setUp(self):
         self.responder = RagefaceResponder()
 
