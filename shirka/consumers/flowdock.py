@@ -43,9 +43,16 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         reactor.stop()
 
     def create_request(self, message):
-        return Request(message['content'], User(None, None, int(message['user'])), message['event'], 'flowdock')
+        if message['event'] == 'comment':
+            text = message['content']['text']
+        else:
+            text = message['content']
+
+        return Request(text, User(None, None, int(message['user'])), message['event'], 'flowdock')
 
     def messageReceived(self, message):
+
+        # self.logger.debug(message)
 
         request = self.create_request(message)
 
