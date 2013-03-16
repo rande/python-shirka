@@ -31,10 +31,10 @@ class StreamMonitorResponse(StreamResponse):
         return args
 
     def check_response(self, response):
-        if response.status_code != 200:
-            return False
+        if response.status_code >= 200 and response.status_code < 400:
+            return True
 
-        return True
+        return False
 
     def monitor_http(self):
         if 'http' not in self.servers:
@@ -83,9 +83,7 @@ class StreamMonitorResponse(StreamResponse):
         status['retry'] = status['retry'] + 1
         status['error'] = status['error'] + 1
 
-        if status['retry'] == 1:
-            self.consumer.post("Monitor: [KO] the server %s - %s fails to response" % (server_name, server['url']), self.request)
-        elif status['retry'] == 5:
+        if status['retry'] == 5:
             self.consumer.post("Monitor: [KO] the server %s - %s fails to response (5 times in a row)" % (server_name, server['url']), self.request)
         elif status['retry'] % 1000 == 0:
             self.consumer.post("Monitor: [KO] the server %s - %s fails to response" % (server_name, server['url']), self.request)
