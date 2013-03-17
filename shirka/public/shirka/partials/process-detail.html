@@ -1,0 +1,22 @@
+<h3>Process stream</h3>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>ID</dt>
+        <dd>{{ process.id }}</dd>
+        <dt>Command</dt>
+        <dd>{{ process.command }}</dd>
+        <dt>State</dt>
+        <dd>{{ process.state }}</dd>
+        <dt>Server</dt>
+        <dd>{{ process.server }}</dd>
+        <dt>User</dt>
+        <dd>{{ process.user }}</dd>
+    </dl>
+
+    <h4>stdout - <a href="/api/process/{{ process.id }}/stdout">/api/process/{{ process.id }}/stdout</a></h4>
+    <pre> {{ std.out }} </pre>
+
+    <h4>stderr - <a href="/api/process/{{ process.id }}/stderr">/api/process/{{ process.id }}/stderr</a></h4>
+    <pre> {{ std.err }} </pre>
+</div>
