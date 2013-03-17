@@ -49,3 +49,4 @@ from status import StatusResponder
 from help import HelpResponder
 from remote import RemoteResponder
 from monitor import MonitorResponder
+from process import ProcessResponder

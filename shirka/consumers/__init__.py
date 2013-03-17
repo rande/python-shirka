@@ -3,9 +3,11 @@
 import unittest
 
 class Bot(object):
-    def __init__(self, name, email):
+    def __init__(self, name, email, url, process_executor=None):
         self.name = name
         self.email = email
+        self.url = url
+        self.process_executor = process_executor
 
 class User(object):
     def __init__(self, name, email, id):
