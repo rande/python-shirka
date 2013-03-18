@@ -6,8 +6,8 @@ class ProcReadView(MethodView):
     def __init__(self, path):
         self.path = path
 
-    def get(self, uuid, fd):
-        path = "%s/%s/%s" % (self.path, uuid, fd)
+    def get(self, id, fd):
+        path = "%s/%s/%s" % (self.path, id, fd)
 
         resp = flask.make_response(file(path).read(), 200)
         resp.headers['Content-Type'] = 'text/plain'
@@ -18,8 +18,8 @@ class ProcView(MethodView):
     def __init__(self, path):
         self.path = path
 
-    def get(self, uuid):
-        path = "%s/%s/state.json" % (self.path, uuid)
+    def get(self, id):
+        path = "%s/%s/state.json" % (self.path, id)
 
         resp = flask.make_response(file(path).read(), 200)
         resp.headers['Content-Type'] = 'application/json'
