@@ -51,9 +51,6 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         return Request(text, User(None, None, int(message['user'])), message['event'], 'flowdock')
 
     def messageReceived(self, message):
-
-        # self.logger.debug(message)
-
         request = self.create_request(message)
 
         if request.user.id == 0:
@@ -142,7 +139,7 @@ class TestFlowDockConsumer(unittest.TestCase):
 
         # f = FlowDock(api_key="fake", app_name='Bot %s' % bot.name, project="Project %s" % flow)
 
-        self.consumer = FlowDockConsumer(Bot("name", "email"), "token", [], None)
+        self.consumer = FlowDockConsumer(Bot("name", "email", None), "token", [], None)
 
     def test_markdown(self):
         help = "# help\n\n##command \n\nusage: help\n"

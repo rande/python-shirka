@@ -12,19 +12,19 @@ services:
             - [add_url_rule, ['/process/<id>/<fd>'],  {view_func: '@shirka.flask.view.shirka_proc_read_view'}]
 
     shirka.flask.view.shirka_proc_list:
-        class: shirka.control.proc.ProcListView.as_view
+        class: [shirka.control.proc, ProcListView.as_view]
         arguments: 
             - shirka_proc_list
             - "%shirka.data.dir%"
 
     shirka.flask.view.shirka_proc_view:
-        class: shirka.control.proc.ProcView.as_view
+        class: [shirka.control.proc, ProcView.as_view]
         arguments: 
             - shirka_proc_view
             - "%shirka.data.dir%"
 
     shirka.flask.view.shirka_proc_read_view:
-        class: shirka.control.proc.ProcReadView.as_view
+        class: [shirka.control.proc, ProcReadView.as_view]
         arguments: 
             - shirka_proc_read_view
             - "%shirka.data.dir%"
