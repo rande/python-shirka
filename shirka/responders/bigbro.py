@@ -9,7 +9,7 @@ class BigbroResponder(Responder):
 
     def generate(self, request):
         """
-        usage: pt user message
+        usage: pt message user
         Generates a point to the provided user
         """
         words = request.content.split(" ")

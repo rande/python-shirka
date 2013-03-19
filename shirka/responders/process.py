@@ -77,4 +77,24 @@ class ProcessResponder(Responder):
         proc.user = request.user.id
 
         return ProcessStreamResponse(proc, self.servers[words[1]].copy(), self.bot)
-        
+
+class TestProcessResponder(BaseTestCase):
+    def setUp(self):
+        self.responder = ProcessResponder(
+            { 'nono': {} },
+            [1],
+            { 'ls' : 'ls -ls'},
+            None
+        )
+
+    def test_support(self):
+
+        from shirka.consumers import Request, User
+
+        request = Request("process nono ls", User('name', 'email@email.com', 1), "type", "test provider")
+        response = self.responder.generate(request)
+
+        self.assertIsInstance(response, ProcessStreamResponse)
+
+
+

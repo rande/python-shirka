@@ -12,11 +12,21 @@
         <dd>{{ process.server }}</dd>
         <dt>User</dt>
         <dd>{{ process.user }}</dd>
+        <dt>Created At</dt>
+        <dd>{{ process.created_at }}&nbsp;</dd>
+        <dt>Started At</dt>
+        <dd>{{ process.started_at }}&nbsp;</dd>
+        <dt>Completed At</dt>
+        <dd>{{ process.completed_at }}&nbsp;</dd>
+        <dt>Std Out</dt>
+        <dd><a href="/api/process/{{ process.id }}/stdout">/api/process/{{ process.id }}/stdout</a></dd>
+        <dt>Std Err</dt>
+        <dd><a href="/api/process/{{ process.id }}/stderr">/api/process/{{ process.id }}/stderr</a></dd>
     </dl>
 
-    <h4>stdout - <a href="/api/process/{{ process.id }}/stdout">/api/process/{{ process.id }}/stdout</a></h4>
+    <h4>stdout</h4>
     <pre> {{ std.out }} </pre>
 
-    <h4>stderr - <a href="/api/process/{{ process.id }}/stderr">/api/process/{{ process.id }}/stderr</a></h4>
+    <h4>stderr</h4>
     <pre> {{ std.err }} </pre>
 </div>

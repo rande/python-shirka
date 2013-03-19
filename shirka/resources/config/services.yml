@@ -15,19 +15,19 @@ services:
         class: [shirka.control.proc, ProcListView.as_view]
         arguments: 
             - shirka_proc_list
-            - "%shirka.data.dir%"
+            - "%shirka.data.dir%/proc"
 
     shirka.flask.view.shirka_proc_view:
         class: [shirka.control.proc, ProcView.as_view]
         arguments: 
             - shirka_proc_view
-            - "%shirka.data.dir%"
+            - "%shirka.data.dir%/proc"
 
     shirka.flask.view.shirka_proc_read_view:
         class: [shirka.control.proc, ProcReadView.as_view]
         arguments: 
             - shirka_proc_read_view
-            - "%shirka.data.dir%"
+            - "%shirka.data.dir%/proc"
 
     shirka.twisted.web.resource:
         class: twisted.web.resource.Resource
@@ -50,12 +50,12 @@ services:
     shirka.twisted.web.site:
         class: twisted.web.server.Site
         arguments: 
-            - '@shirka.twisted.web.resource'
+            - '#@shirka.twisted.web.resource'
 
     shirka.twisted.reactor:
         class: twisted.internet.reactor
-        # calls:
-            # - [listenTCP, ['%flask.app.port%', '@shirka.twisted.web.site']]
+        calls:
+            - [listenTCP, ['%flask.app.port%', '@shirka.twisted.web.site']]
 
     shirka.twisted.reactor.thread_pool:
         class: twisted.internet.reactor.getThreadPool
