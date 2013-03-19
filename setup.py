@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="shirka",
-    version="0.0.2",
+    version="0.0.3",
     description="A small bot based on twisted",
     author="Thomas Rabaix",
     author_email="thomas.rabaix@gmail.com",
