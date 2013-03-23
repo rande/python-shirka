@@ -66,21 +66,29 @@ Usage
 
     if __name__ == "__main__":
 
-        for flow in container.parameters['consumers']:
+        for flow in container.parameters.get('consumers'):
+            if not container.has("consumer.%s.flowdock" % flow):
+                continue
+
             twistedhttpstream.stream(
-                reactor, 
-                "https://stream.flowdock.com/flows/%s/%s" % (container.parameters["flowdock.%s.organisation" % flow], flow), 
+                container.get('ioc.extra.twisted.reactor'), 
+                "https://stream.flowdock.com/flows/%s/%s" % (container.parameters.get("flowdock.%s.organisation" % flow), flow), 
                 container.get("consumer.%s.flowdock" % flow), 
-                username=container.parameters["flowdock.%s.user.token" % flow], 
+                username=container.parameters.get("flowdock.user.token"),
                 password=""
             )
         
-
-        reactor.run()
+        container.get('ioc.extra.twisted.reactor').run()
 
 - Configuration file
 
 .. code-block:: yaml
+
+    shirka:
+        data_dir: /path/to/stored/data
+
+    ioc.extra.flask:
+    ioc.extra.twisted:
 
     parameters:
         consumers: [test]
