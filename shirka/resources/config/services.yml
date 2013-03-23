@@ -1,16 +1,4 @@
-parameters:
-    flask.app.name: shirka
-    flask.app.port: 8080
-
 services:
-    shirka.flask:
-        class: flask.Flask
-        arguments: ['%flask.app.name%']
-        calls:
-            - [add_url_rule, ['/process'],            {view_func: '@shirka.flask.view.shirka_proc_list'}]
-            - [add_url_rule, ['/process/<id>'],       {view_func: '@shirka.flask.view.shirka_proc_view'}]
-            - [add_url_rule, ['/process/<id>/<fd>'],  {view_func: '@shirka.flask.view.shirka_proc_read_view'}]
-
     shirka.flask.view.shirka_proc_list:
         class: [shirka.control.proc, ProcListView.as_view]
         arguments: 
@@ -43,19 +31,11 @@ services:
     shirka.twisted.web.resource.wsgi:
         class: twisted.web.wsgi.WSGIResource
         arguments: 
-            - '@shirka.twisted.reactor'
-            - '@shirka.twisted.reactor.thread_pool'
-            - '@shirka.flask'
+            - '@ioc.extra.twisted.reactor'
+            - '@ioc.extra.twisted.reactor.thread_pool'
+            - '@ioc.extra.flask.app'
 
     shirka.twisted.web.site:
         class: twisted.web.server.Site
         arguments: 
             - '#@shirka.twisted.web.resource'
-
-    shirka.twisted.reactor:
-        class: twisted.internet.reactor
-        calls:
-            - [listenTCP, ['%flask.app.port%', '@shirka.twisted.web.site']]
-
-    shirka.twisted.reactor.thread_pool:
-        class: twisted.internet.reactor.getThreadPool

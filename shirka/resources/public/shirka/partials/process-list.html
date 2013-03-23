@@ -7,12 +7,12 @@
             <td>State</td>
             <td>User</td>
             <td>Server</td>
-            <td>command</td>
             <td>Created At</td>
         </thead>
         <tr ng-repeat="process in processes.results">
             <td>
-                <a ng-href="#/process/{{process.id}}">{{ process.id }}</a>
+                <a ng-href="#/process/{{process.id}}">{{ process.id }}</a> <br />
+                {{ process.command }}
             </td>
             <td>
                 {{ process.state }}
@@ -22,9 +22,6 @@
             </td>
             <td>
                 {{ process.server }}
-            </td>
-            <td>
-                {{ process.command }}
             </td>
             <td>
                 {{ process.created_at }}

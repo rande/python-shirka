@@ -2,7 +2,7 @@
 from shirka.responders import Responder, StreamResponse
 from shirka.consumers import BaseTestCase
 from shirka.tools import process
-import paramiko, functools
+import paramiko, functools, re
 
 class ProcessStreamResponse(StreamResponse):
     def __init__(self, proc, server, bot):
@@ -24,12 +24,19 @@ class ProcessStreamResponse(StreamResponse):
             client.connect(host, **args)
         except paramiko.BadHostKeyException, e:
             consumer.post("BadHostKeyException: %s" % self.name, request)
+            return
 
         except paramiko.AuthenticationException, e:
             consumer.post("AuthenticationException: %s" % self.name, request)
+            return
 
         except paramiko.SSHException, e:
             consumer.post("SSHException: %s" % self.name, request)
+            return
+
+        except Exception, e:
+            consumer.post("Unknow error: %s" % e, request)
+            return
 
         try:
             self.bot.process_executor.run(self.proc, functools.partial(process.paramiko_run, client))
@@ -61,18 +68,33 @@ class ProcessResponder(Responder):
         if request.user.id not in self.users:
             return "You fool, you are not my master!!"
 
-        words = request.content.split(" ", 2)
+        words = request.content.split(" ")
 
-        if len(words) < 2:
+        if len(words) < 3:
             return "Invalid command"
 
         if words[1] not in self.servers:
-            return "Sorry, there is no such server available"
+            return "Sorry, there is no such server (%s) available" % words[1]
 
         if words[2] not in self.commands:
-            return "Sorry, the command keyword does not exist"
+            return "Sorry, the command keyword (%s) does not exist" % words[2]
 
-        proc = process.Process(self.commands[words[2]])
+        command = self.commands[words[2]]
+
+        pos = 1
+
+        for word in words[3:]:
+            if re.search("[^0-9\.\-A-Za-z]", word):
+                return "Invalid argument: %s for command: %s" % (word, command)
+
+            command = command.replace("ARG%d" % pos, word)
+
+            pos = pos + 1
+
+        if re.search(r"ARG[0-9]", command):
+            return "Sorry missing argument for command: %s" % command
+
+        proc = process.Process(command)
         proc.server = words[1]
         proc.user = request.user.id
 

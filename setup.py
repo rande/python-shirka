@@ -11,6 +11,6 @@ setup(
     author_email="thomas.rabaix@gmail.com",
     url="https://github.com/rande/python-shirka",
     py_modules=["shirka"],
-    packages = ['shirka', 'shirka.consumers', 'shirka.responders', 'shirka.control', 'shirka.public', 'shirka.tools'],
+    packages = ['shirka', 'shirka.consumers', 'shirka.responders', 'shirka.control', 'shirka.tools'],
     install_requires=["ioc", "twisted", "twistedhttpstream"],
 )

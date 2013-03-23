@@ -23,12 +23,19 @@ class RemoteStreamResponse(StreamResponse):
             client.connect(host, **args)
         except paramiko.BadHostKeyException, e:
             consumer.post("BadHostKeyException: %s" % self.name, request)
+            return
 
         except paramiko.AuthenticationException, e:
             consumer.post("AuthenticationException: %s" % self.name, request)
+            return
 
         except paramiko.SSHException, e:
             consumer.post("SSHException: %s" % self.name, request)
+            return
+
+        except Exception, e:
+            consumer.post("Unknow error: %s" % e, request)
+            return
 
         try:
             stdin, stdout, stderr = client.exec_command(self.command)
