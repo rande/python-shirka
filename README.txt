@@ -149,7 +149,7 @@ Usage
         consumer.test.flowdock:
             class: shirka.consumers.FlowDockConsumer
             arguments: 
-                - '@bot'
+                - '@shirka.bot'
                 - "%flowdock.test.flow.token%"
                 - 
                     - '@responders.rage_face' 

@@ -8,8 +8,13 @@ class Extension(ioc.component.Extension):
 
         loader = ioc.loader.YamlLoader()
         loader.load("%s/resources/config/services.yml" % path, container_builder)
+        loader.load("%s/resources/config/responders.yml" % path, container_builder)
 
         container_builder.parameters.set('shirka.web.public.dir', config.get('public_dir', "%s/resources/public" % path))
+        container_builder.parameters.set('shirka.bot.name', config.get('bot.name', 'Shirka'))
+        container_builder.parameters.set('shirka.bot.email', config.get('bot.email', 'no-reply@nowhere'))
+        container_builder.parameters.set('shirka.bot.url', config.get('bot.email', 'http://nowhere'))
+
         container_builder.parameters.set('shirka.web.api.base_url', config.get('api.base_url', ''))
 
         if not config.get('data_dir', False):

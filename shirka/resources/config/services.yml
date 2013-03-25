@@ -1,4 +1,15 @@
 services:
+    shirka.bot:
+        class: shirka.consumers.Bot
+        arguments: [ '%shirka.bot.name%', '%shirka.bot.email%', '%shirka.bot.url%']
+        kwargs:
+            process_executor: '@shirka.process.executor'
+
+    shirka.process.executor:
+        class: shirka.tools.process.ProcessExecutor
+        arguments:
+            - '%shirka.data.dir%/proc'
+            
     shirka.flask.view.shirka_proc_list:
         class: [shirka.control.proc, ProcListView.as_view]
         arguments: 
