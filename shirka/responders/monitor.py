@@ -20,6 +20,9 @@ class StreamMonitorResponse(StreamResponse):
         if 'verify' in options:
             args['verify'] = options['verify']
 
+        if 'cert' in options:
+            args['cert'] = options['cert']
+
         if 'timeout' in options:
             args['timeout'] = float(options['timeout'])
         else:
