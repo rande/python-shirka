@@ -50,3 +50,6 @@ services:
         class: twisted.web.server.Site
         arguments: 
             - '#@shirka.twisted.web.resource'
+
+    shirka.tools.paramiko:
+        class: shirka.tools.paramiko.Paramiko

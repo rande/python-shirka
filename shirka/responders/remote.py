@@ -1,46 +1,28 @@
 # vim: set fileencoding=utf-8 :
 from shirka.responders import Responder, StreamResponse
 from shirka.consumers import BaseTestCase
-import paramiko
+import paramiko, os
 
 class RemoteStreamResponse(StreamResponse):
-    def __init__(self, name, server, command):
+    def __init__(self, name, server, command, paramiko):
         self.server = server
         self.name = name
         self.command = command
+        self.paramiko = paramiko
 
     def handle(self, request, consumer):
         consumer.post("Order received: %s$ %s" % (self.name, self. command), request)
 
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
         try:
-            host = self.server['host']
-            args = self.server
-            del(args['host'])
-
-            client.connect(host, **args)
-        except paramiko.BadHostKeyException, e:
-            consumer.post("BadHostKeyException: %s" % self.name, request)
-            return
-
-        except paramiko.AuthenticationException, e:
-            consumer.post("AuthenticationException: %s" % self.name, request)
-            return
-
-        except paramiko.SSHException, e:
-            consumer.post("SSHException: %s" % self.name, request)
-            return
-
+            client = self.paramiko.get_client(self.server['host'], self.server)
         except Exception, e:
-            consumer.post("Unknow error: %s" % e, request)
+            consumer.post("Error while getting paramiko client: %s" % e, request)
             return
 
         try:
             stdin, stdout, stderr = client.exec_command(self.command)
 
-            message = ">" + ">".join(stdout.readlines())
+            message = "> " + "> ".join(stdout.readlines())
 
             consumer.post(message, request)
 
@@ -51,9 +33,10 @@ class RemoteStreamResponse(StreamResponse):
 
 
 class RemoteResponder(Responder):
-    def __init__(self, servers, users):
+    def __init__(self, servers, users, paramiko):
         self.servers = servers
         self.users = users
+        self.paramiko = paramiko
 
     def name(self):
         return "ssh"
@@ -74,5 +57,5 @@ class RemoteResponder(Responder):
         if words[1] not in self.servers:
             return "Sorry, there is no such server available"
 
-        return RemoteStreamResponse(words[1], self.servers[words[1]].copy(), words[2])
+        return RemoteStreamResponse(words[1], self.servers[words[1]].copy(), words[2], self.paramiko)
         

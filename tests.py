@@ -16,6 +16,7 @@ def load_tests(loader, tests, pattern):
 
             suite.addTests(loader.loadTestsFromModule(mod))
         except ImportError, e:
+            print e
             pass
 
     return suite

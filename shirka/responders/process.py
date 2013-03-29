@@ -5,37 +5,19 @@ from shirka.tools import process
 import paramiko, functools, re
 
 class ProcessStreamResponse(StreamResponse):
-    def __init__(self, proc, server, bot):
+    def __init__(self, proc, server, bot, paramiko):
         self.server = server
         self.proc = proc
         self.bot = bot
+        self.paramiko = paramiko
 
     def handle(self, request, consumer):
         consumer.post("Starting process: %s@%s$ %s -\n%s#/process/%s" % (self.proc.user, self.proc.server, self.proc.command, self.bot.url, self.proc.id), request)
 
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
         try:
-            host = self.server['host']
-            args = self.server
-            del(args['host'])
-
-            client.connect(host, **args)
-        except paramiko.BadHostKeyException, e:
-            consumer.post("BadHostKeyException: %s" % self.name, request)
-            return
-
-        except paramiko.AuthenticationException, e:
-            consumer.post("AuthenticationException: %s" % self.name, request)
-            return
-
-        except paramiko.SSHException, e:
-            consumer.post("SSHException: %s" % self.name, request)
-            return
-
+            client = self.paramiko.get_client(self.server['host'], self.server)
         except Exception, e:
-            consumer.post("Unknow error: %s" % e, request)
+            consumer.post("Error while getting paramiko client: %s" % e, request)
             return
 
         try:
@@ -51,11 +33,12 @@ class ProcessStreamResponse(StreamResponse):
 
 
 class ProcessResponder(Responder):
-    def __init__(self, servers, users, commands, bot):
+    def __init__(self, servers, users, commands, bot, paramiko):
         self.servers = servers
         self.users = users
         self.commands = commands
         self.bot = bot
+        self.paramiko = paramiko
 
     def name(self):
         return "process"
@@ -98,7 +81,7 @@ class ProcessResponder(Responder):
         proc.server = words[1]
         proc.user = request.user.id
 
-        return ProcessStreamResponse(proc, self.servers[words[1]].copy(), self.bot)
+        return ProcessStreamResponse(proc, self.servers[words[1]].copy(), self.bot, self.paramiko)
 
 class TestProcessResponder(BaseTestCase):
     def setUp(self):
@@ -106,6 +89,7 @@ class TestProcessResponder(BaseTestCase):
             { 'nono': {} },
             [1],
             { 'ls' : 'ls -ls'},
+            None,
             None
         )
 
