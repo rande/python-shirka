@@ -1,6 +1,7 @@
 # vim: set fileencoding=utf-8 :
 
 import unittest
+from twisted.internet import reactor
 
 class Bot(object):
     def __init__(self, name, email, url, process_executor=None):
@@ -37,6 +38,12 @@ class Request(object):
     def __getitem__(self, key):
         return self.content[key]
 
+class StreamAssistant(object):
+    def __init__(self, consumer):
+        self.consumer = consumer
+
+    def add(self, response, request):       
+        reactor.callInThread(response.handle, request, self.consumer)
 
 class BaseTestCase(unittest.TestCase):
     def create_request(self, message):

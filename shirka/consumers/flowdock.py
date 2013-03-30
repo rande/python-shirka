@@ -1,19 +1,12 @@
 # vim: set fileencoding=utf-8 :
 
-from shirka.consumers import Request, User
+from shirka.consumers import Request, User, StreamAssistant
 from shirka.responders import Responder, Response, StreamResponse
 
 from twisted.internet import reactor
 
 import requests, twistedhttpstream, exceptions, logging
 import markdown, unittest, re
-
-class StreamAssistant(object):
-    def __init__(self, consumer):
-        self.consumer = consumer
-
-    def add(self, response, request):       
-        reactor.callInThread(response.handle, request, self.consumer)
 
 class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
@@ -39,9 +32,6 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         for responder in self.responders:
             self.handle_response(responder.on_start(self), Request('on_start', User(None, None, 0), 'init', 'flowdock'))
 
-    def connectionFailed(self, why):
-        reactor.stop()
-
     def create_request(self, message):
         if message['event'] == 'comment':
             text = message['content']['text']
@@ -59,21 +49,28 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         if request.type == 'message' or request.type == 'comment':
             self.logger.debug("<<< Request: %s" % request.content)
 
-            for responder in self.responders:
-                if not responder.support(request):
-                    continue
 
-                self.logger.debug("    Found responder: %s" % responder)
+        responses = self.handle_message(request)
 
-                try:
-                    response = responder.generate(request)
-                except exceptions.Exception, e:
-                    self.logger.warning("!!! Error while handling message:\n\t %s" % e.message)
+        for response in responses:
+            self.handle_response(response, request)
 
-                    return 
-                    # raise e
+    def handle_message(self, request):
+        responses = []
+        for responder in self.responders:
+            if not responder.support(request):
+                continue
 
-                self.handle_response(response, request)
+            self.logger.debug("    Found responder: %s" % responder)
+
+            try:
+                responses.append(self.normalize(responder.generate(request), request))
+            except exceptions.Exception, e:
+                self.logger.warning("!!! Error while handling message:\n\t %s" % e.message)
+
+                raise e
+
+        return responses
 
     def handle_response(self, response, request):
         if isinstance(response, StreamResponse):
@@ -110,8 +107,6 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         return "\t" + "\n\t".join(content.split("\n"))
 
     def post(self, response, request):
-        response = self.normalize(response, request)
-
         if response in [False, None]:
             return
 
