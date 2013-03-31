@@ -1,7 +1,9 @@
 # vim: set fileencoding=utf-8 :
 
-import unittest
 from twisted.internet import reactor
+from shirka.responders import Response, StreamResponse
+
+import unittest
 
 class Bot(object):
     def __init__(self, name, email, url, process_executor=None):
@@ -38,13 +40,6 @@ class Request(object):
     def __getitem__(self, key):
         return self.content[key]
 
-class StreamAssistant(object):
-    def __init__(self, consumer):
-        self.consumer = consumer
-
-    def add(self, response, request):       
-        reactor.callInThread(response.handle, request, self.consumer)
-
 class BaseTestCase(unittest.TestCase):
     def create_request(self, message):
         return Request(message, None,  None,  None)
@@ -52,6 +47,46 @@ class BaseTestCase(unittest.TestCase):
     def generate(self, message):
         return self.responder.generate(self.create_request(message))
 
+
+class StreamAssistant(object):
+    def __init__(self, consumer):
+        self.consumer = consumer
+
+    def add(self, response, request):
+        reactor.callInThread(response.handle, request, self.consumer)
+
+
+class Consumer(object):
+    def normalize(self, response, request):
+        if response == False:
+            return
+
+        if isinstance(response, (dict)):
+            r = Response(response['content'])
+
+            if 'tags' in response:
+                r.tags = response['tags']
+
+            response = r
+
+        if isinstance(response, StreamResponse):
+            return response
+
+        if not isinstance(response, Response):
+            response = Response(response)
+
+        response.command = request.content
+
+        return response
+
+    def markdown(self, content):
+        return markdown.markdown(content,  extensions=['headerid(level=3)', 'nl2br', 'tables'])
+
+    def format(self, content):
+        if re.match("(http|https)://(.*)\.(gif|jpg|jpeg|png)", content):
+            return content
+
+        return "\t" + "\n\t".join(content.split("\n"))
 
 class TestRequest(BaseTestCase):
     def setUp(self):

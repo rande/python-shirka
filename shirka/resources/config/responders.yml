@@ -1,25 +1,25 @@
 services:
     shirka.responders.math:
-        class: shirka.responders.MathResponder
+        class: shirka.responders.math.MathResponder
 
     shirka.responders.xkcd:
-        class: shirka.responders.XkcdResponder
+        class: shirka.responders.xkcd.XkcdResponder
 
     shirka.responders.big_bro:
-        class: shirka.responders.BigbroResponder
+        class: shirka.responders.bigbro.BigbroResponder
 
     shirka.responders.reminder:
-        class: shirka.responders.ReminderResponder
+        class: shirka.responders.reminder.ReminderResponder
 
     shirka.responders.status:
-        class: shirka.responders.StatusResponder
+        class: shirka.responders.status.StatusResponder
 
     shirka.responders.wat:
-        class: shirka.responders.WatResponder
+        class: shirka.responders.wat.WatResponder
 
     shirka.responders.9gag:
-        class: shirka.responders.NineGagResponder
+        class: shirka.responders.ninegag.NineGagResponder
 
     shirka.responders.ascii:
-        class: shirka.responders.AsciiResponder
+        class: shirka.responders.ascii.AsciiResponder
         

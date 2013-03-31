@@ -1,10 +1,10 @@
 # vim: set fileencoding=utf-8 :
 
 from twisted.protocols import basic
-from shirka.consumers import Request, User, StreamAssistant
+from shirka.consumers import Request, User, StreamAssistant, Consumer
 from shirka.responders import Responder, Response, StreamResponse
 
-class StdioProtocol(basic.LineReceiver):
+class StdioProtocol(basic.LineReceiver, Consumer):
     """
     This consumer must be used for debbuging only
     """
@@ -28,7 +28,7 @@ class StdioProtocol(basic.LineReceiver):
 
         for name, consumer in self.consumers.iteritems():
             for responder in consumer.responders:
-                self.handle_response(responder.on_start(consumer), Request('on_start', User(None, None, 0), 'init', 'cli'))
+                self.handle_response(responder.on_start(consumer), Request('on_start', User(None, None, self.user_id), 'init', 'cli'))
 
         if len(self.consumers) == 1:
             self.consumer = self.consumers.keys()[0]
@@ -39,8 +39,8 @@ class StdioProtocol(basic.LineReceiver):
         try:
             self._lineReceived(line)
         except Exception, e:
-            for line in e:
-                self.sendLine("Error: %s" % line)
+            import traceback
+            traceback.print_exc()
 
         self.prompt()
 
@@ -78,7 +78,7 @@ class StdioProtocol(basic.LineReceiver):
         responses = self.consumers[self.consumer].handle_message(request)
 
         for response in responses:
-            self.post(response, request)
+            self.handle_response(response, request)
 
     def do_help(self):
         message = "Allows to execute command on the cli instead of the gui \n"
@@ -91,11 +91,15 @@ class StdioProtocol(basic.LineReceiver):
 
     def handle_response(self, response, request):
         if isinstance(response, StreamResponse):
-            self.stream_assistant.add(response, request)
+            response.handle(request, self)
+            # self.stream_assistant.add(response, request)
         else:
             self.post(response, request)
 
     def post(self, response, request):
+
+        response = self.normalize(response, request)
+
         if response in [False, None]:
             return
 

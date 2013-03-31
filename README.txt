@@ -118,17 +118,17 @@ Usage
             arguments: [ '%bot.name%', '%bot.email%']
 
         # Configure shared responders
-        responders.math:        { class: shirka.responders.MathResponder }
-        responders.xkcd:        { class: shirka.responders.XkcdResponder }
-        responders.big_bro:     { class: shirka.responders.BigbroResponder }
-        responders.reminder:    { class: shirka.responders.ReminderResponder }
-        responders.status:      { class: shirka.responders.StatusResponder }
-        responders.rage_face:   { class: shirka.responders.RagefaceResponder }
-        responders.wat:         { class: shirka.responders.WatResponder }
-        responders.9gag:        { class: shirka.responders.NineGagResponder }
+        responders.math:        { class: shirka.responders.mate.MathResponder }
+        responders.xkcd:        { class: shirka.responders.xkcd.XkcdResponder }
+        responders.big_bro:     { class: shirka.responders.bigbro.BigbroResponder }
+        responders.reminder:    { class: shirka.responders.reminder.ReminderResponder }
+        responders.status:      { class: shirka.responders.status.StatusResponder }
+        responders.rage_face:   { class: shirka.responders.rageface.RagefaceResponder }
+        responders.wat:         { class: shirka.responders.wat.WatResponder }
+        responders.9gag:        { class: shirka.responders.ninegag.NineGagResponder }
 
         responders.remote:
-            class: shirka.responders.RemoteResponder
+            class: shirka.responders.remote.RemoteResponder
             arguments: 
                 - '%remote.servers%'
                 - '%remote.users%'
@@ -176,4 +176,4 @@ Usage
                 - '%flowdock.test.user.token%'
 
         responders.test.help:
-            class: shirka.responders.HelpResponder
+            class: shirka.responders.help.HelpResponder

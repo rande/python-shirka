@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 
-from shirka.consumers import Request, User, StreamAssistant
+from shirka.consumers import Request, User, StreamAssistant, Consumer
 from shirka.responders import Responder, Response, StreamResponse
 
 from twisted.internet import reactor
@@ -8,7 +8,7 @@ from twisted.internet import reactor
 import requests, twistedhttpstream, exceptions, logging
 import markdown, unittest, re
 
-class FlowDockConsumer(twistedhttpstream.MessageReceiver):
+class FlowDockConsumer(twistedhttpstream.MessageReceiver, Consumer):
 
     def __init__(self, bot, token, responders, flowdock, logger=None):
         """consumer(responders)
@@ -63,12 +63,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
 
             self.logger.debug("    Found responder: %s" % responder)
 
-            try:
-                responses.append(self.normalize(responder.generate(request), request))
-            except exceptions.Exception, e:
-                self.logger.warning("!!! Error while handling message:\n\t %s" % e.message)
-
-                raise e
+            responses.append(self.normalize(responder.generate(request), request))
 
         return responses
 
@@ -78,33 +73,6 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver):
         else:
             self.post(response, request)
 
-    def normalize(self, response, request):
-        if response == False:
-            return
-
-        if isinstance(response, (dict)):
-            r = Response(response['content'])
-
-            if 'tags' in response:
-                r.tags = response['tags']
-
-            response = r
-
-        if not isinstance(response, Response):
-            response = Response(response)
-
-        response.command = request.content
-
-        return response
-
-    def markdown(self, content):
-        return markdown.markdown(content,  extensions=['headerid(level=3)', 'nl2br', 'tables'])
-
-    def format(self, content):
-        if re.match("(http|https)://(.*)\.(gif|jpg|jpeg|png)", content):
-            return content
-
-        return "\t" + "\n\t".join(content.split("\n"))
 
     def post(self, response, request):
         if response in [False, None]:

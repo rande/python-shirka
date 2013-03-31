@@ -33,7 +33,9 @@ class StreamResponse(Response):
 
     def handle(self, request, consumer):
         self.is_completed = True
-        
+
+    def __str__(self):
+        return "<StreamResponse>"
 
 from rageface import RagefaceResponder
 from flowdock import FlowdockWhoisResponder
