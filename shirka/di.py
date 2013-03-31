@@ -13,7 +13,7 @@ class Extension(ioc.component.Extension):
         container_builder.parameters.set('shirka.web.public.dir', config.get('public_dir', "%s/resources/public" % path))
         container_builder.parameters.set('shirka.bot.name', config.get('bot.name', 'Shirka'))
         container_builder.parameters.set('shirka.bot.email', config.get('bot.email', 'no-reply@nowhere'))
-        container_builder.parameters.set('shirka.bot.url', config.get('bot.email', 'http://nowhere'))
+        container_builder.parameters.set('shirka.bot.url', config.get('bot.url', 'http://nowhere'))
 
         container_builder.parameters.set('shirka.web.api.base_url', config.get('api.base_url', ''))
 

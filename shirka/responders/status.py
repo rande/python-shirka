@@ -3,6 +3,7 @@
 from shirka.responders import Responder
 from shirka.consumers import BaseTestCase
 from random import choice
+import datetime
 
 
 STATUS = [
@@ -45,17 +46,37 @@ MESSAGES = [
 ]
 
 class StatusResponder(Responder):
+    def __init__(self):
+        self.started_at = None
+        self.word_counts = 0
+
     def name(self):
         return 'status'
 
-    # def on_start(self, consumer):
-    #     return "%s" % choice(STATUS)
+    def on_start(self, consumer):
+        self.started_at = datetime.datetime.now()
+
+        return "%s" % choice(STATUS)
+
+    def support(self, message):
+        return True
 
     def generate(self, request):
         """
-        usage: status
+        usage: status [full]
         return a random status message
         """
+
+        self.word_counts += len(request.content.split(" "))
+
+        words = request.content.split(" ", 2)
+
+        if words[0] != 'status':
+            return False
+        
+        if len(words) > 1 and words[1] == 'full':
+            return "up since: %s, words parsed: %s" % (self.started_at, self.word_counts)
+
         return "%s" % choice(MESSAGES)
 
 class TestStatusResponder(BaseTestCase):

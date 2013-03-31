@@ -103,5 +103,8 @@ class StdioProtocol(basic.LineReceiver, Consumer):
         if response in [False, None]:
             return
 
+        if not response.content:
+            return
+
         for line in response.content.split("\n"):
             self.sendLine(" » %s" % line)
