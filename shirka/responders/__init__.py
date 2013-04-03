@@ -10,9 +10,8 @@ class Responder(object):
     def on_start(self, consumer):
         return False
 
-    def support(self, message):
-        return message[0:len(self.name())] == self.name()
-
+    def support(self, request):
+        return request.content[0:len(self.name())] == self.name()
 
 class Response(object):
     def __init__(self, content):

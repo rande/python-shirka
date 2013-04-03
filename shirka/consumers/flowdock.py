@@ -35,20 +35,21 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver, Consumer):
     def create_request(self, message):
         if message['event'] == 'comment':
             text = message['content']['text']
-        else:
+        elif message['event'] == 'message':
             text = message['content']
+        else:
+            return False
 
         return Request(text, User(None, None, int(message['user'])), message['event'], 'flowdock')
 
     def messageReceived(self, message):
         request = self.create_request(message)
-
-        if request.user.id == 0:
+        
+        if not request or request.user.id == 0:
             return
 
         if request.type == 'message' or request.type == 'comment':
             self.logger.debug("<<< Request: %s" % request.content)
-
 
         responses = self.handle_message(request)
 

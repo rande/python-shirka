@@ -3,7 +3,7 @@
 from twisted.internet import reactor
 from shirka.responders import Response, StreamResponse
 
-import unittest
+import unittest, re, markdown
 
 class Bot(object):
     def __init__(self, name, email, url, process_executor=None):

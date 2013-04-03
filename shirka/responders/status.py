@@ -56,7 +56,8 @@ class StatusResponder(Responder):
     def on_start(self, consumer):
         self.started_at = datetime.datetime.now()
 
-        return "%s" % choice(STATUS)
+        return False
+        # return "%s" % choice(STATUS)
 
     def support(self, message):
         return True
