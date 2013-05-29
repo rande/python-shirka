@@ -50,3 +50,4 @@ from help import HelpResponder
 from remote import RemoteResponder
 from monitor import MonitorResponder
 from process import ProcessResponder
+from so import SoResponder
