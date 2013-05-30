@@ -19,6 +19,7 @@ Responders
 * xkcd
 * ascii
 * 9gag
+* jira
 
 Installation
 ============
@@ -36,6 +37,7 @@ Install dependencies::
     pip install paramiko
     pip install pyyaml
     pip install ioc
+    pip install jira-python
 
 Running Tests
 =============
