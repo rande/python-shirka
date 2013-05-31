@@ -76,25 +76,40 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver, Consumer):
 
 
     def post(self, response, request):
+
+        response = self.normalize(response, request)
+
         if response in [False, None]:
             return
 
-        self.logger.debug(">>> Response: %s" % response)
+        if not response.content:
+            return
+        
+        self.logger.debug(">>> Response: %s" % response.content)
 
         if len(response.content) > 300:
-            requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
+            flow_response = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
                 "content": "\t response too long, check the flowdock inbox!",
                 "external_user_name": self.bot.name,
                 "tags":  response.tags
             })
 
+            if not flow_response.ok:
+                print flow_response
+
             self.flowdock.post(self.bot.email, "Response to %s" % response.command, self.markdown(response.content) , from_name=self.bot.name)    
         else:
-            requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data= {
+            data= {
                 "content": self.format(response.content),
                 "external_user_name": self.bot.name,
                 "tags":  response.tags
-            })
+            }
+            
+            flow_response = requests.post("https://api.flowdock.com/v1/messages/chat/%s" % self.token, data=data)
+
+            if not flow_response.ok:
+                print flow_response
+
 
 class TestFlowDockConsumer(unittest.TestCase):
     def setUp(self):

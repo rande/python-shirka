@@ -53,3 +53,11 @@ services:
 
     shirka.tools.paramiko:
         class: shirka.tools.paramiko.Paramiko
+
+    shirka.command.start:
+        class: shirka.command.StartCommand
+        arguments: 
+            - '@service_container'
+        tags:
+            command:
+                - { name: 'shirka:start' }
