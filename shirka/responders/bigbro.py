@@ -32,8 +32,8 @@ class TestBigbroResponder(BaseTestCase):
         self.responder = BigbroResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("pt"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("pt")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_help(self):
         self.assertEquals(self.generate("pt help"), "pt pseudo message")

@@ -27,8 +27,8 @@ class TestXkcdResponder(BaseTestCase):
         self.responder = XkcdResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("xkcd"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("xkcd")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_valid(self):
         self.assertEquals(self.generate("xkcd 1"), "http://imgs.xkcd.com/comics/barrel_cropped_(1).jpg")

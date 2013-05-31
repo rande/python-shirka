@@ -49,8 +49,8 @@ class TestFlowdockWhoisResponder(BaseTestCase):
         self.responder = FlowdockWhoisResponder('orga', 'flow', 'token')
 
     def test_support(self):
-        self.assertTrue(self.responder.support("whois"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("whois")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))

@@ -26,8 +26,8 @@ class TestWatResponder(BaseTestCase):
         self.responder = WatResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("wat"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("wat")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_valid(self):
         self.assertIsNotNone(self.generate("wat"))

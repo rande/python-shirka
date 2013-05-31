@@ -24,8 +24,8 @@ class TestMathResponder(BaseTestCase):
         self.responder = MathResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("math"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("math")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_valid(self):
         self.assertEquals(self.generate("math 1 + 1"), "1 + 1\n=> 2.0")

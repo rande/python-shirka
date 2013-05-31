@@ -67,8 +67,8 @@ class TestReminderResponder(BaseTestCase):
         self.responder = ReminderResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("reminder"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("reminder")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_invalid_count(self):
         self.assertFalse(self.generate("reminder"))

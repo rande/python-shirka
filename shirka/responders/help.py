@@ -60,8 +60,8 @@ class TestHelpResponder(BaseTestCase):
         self.responder = HelpResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("help"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("help")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_on_start(self):
         self.responder.on_start(FakeConsumer([FakeResponder(), FakeEmptyHelpResponder()]))

@@ -85,8 +85,8 @@ class TestStatusResponder(BaseTestCase):
         self.responder = StatusResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("status"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("status")))
+        self.assertTrue(self.responder.support(self.create_request("fuu")))
 
     def test_valid(self):
         self.assertIsNotNone(self.generate("status"))

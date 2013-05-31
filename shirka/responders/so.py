@@ -51,8 +51,8 @@ class TestSoResponder(BaseTestCase):
         self.responder = SoResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("so"))
-        self.assertFalse(self.responder.support("crap"))
+        self.assertTrue(self.responder.support(self.create_request("so")))
+        self.assertFalse(self.responder.support(self.create_request("crap")))
 
     def test_incomplete_command(self):
         self.assertFalse(self.generate("so"))

@@ -23,8 +23,8 @@ class TestAsciiResponder(BaseTestCase):
         self.responder = AsciiResponder()
 
     def test_support(self):
-        self.assertTrue(self.responder.support("ascii"))
-        self.assertFalse(self.responder.support("fuu"))
+        self.assertTrue(self.responder.support(self.create_request("ascii")))
+        self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_valid(self):
         self.assertIsNotNone(self.generate("ascii wat"))
