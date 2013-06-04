@@ -21,7 +21,7 @@ class StdioProtocol(basic.LineReceiver, Consumer):
         return Request(text, User(None, None, int(self.user_id)), 'message', 'cli')
 
     def prompt(self):
-        self.transport.write("%s (%s)$ " % (self.bot.name, self.consumer))
+        self.transport.write(("%s (%s)$ " % (self.bot.name, self.consumer)).encode("utf-8"))
 
     def connectionMade(self):
         self.sendLine("Debug console. Type 'help' for help.")
@@ -107,4 +107,4 @@ class StdioProtocol(basic.LineReceiver, Consumer):
             return
 
         for line in response.content.split("\n"):
-            self.sendLine(" » %s" % line)
+            self.sendLine((u" » %s" % line).encode("utf-8"))
