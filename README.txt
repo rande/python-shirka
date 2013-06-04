@@ -136,6 +136,11 @@ Usage
         responders.wat:         { class: shirka.responders.wat.WatResponder }
         responders.9gag:        { class: shirka.responders.ninegag.NineGagResponder }
 
+        responders.version:
+            class: shirka.responders.VersionResponder
+            arguments:
+                - '%bot.name%'
+
         responders.remote:
             class: shirka.responders.remote.RemoteResponder
             arguments: 
@@ -184,6 +189,7 @@ Usage
                     - '@responders.status'
                     - '@responders.test.help'
                     - '@responders.test.whois'
+                    - '@responders.version'
                     
                 - '@flowdock.test'
             kwargs:
