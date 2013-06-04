@@ -109,6 +109,15 @@ Usage
         flowdock.test.user.name:    rande
         flowdock.test.user.token:   USER_TOKEN
 
+        # jira
+        jira.1.server:   https://jira.1.net
+        jira.1.base_url: '%jira.1.server%/browse/'
+        jira.1.auth:     !!python/tuple [JIRA_USER_1, JIRA_PWD_1]
+
+        jira.2.server:   https://jira.2.net
+        jira.2.base_url: '%jira.2.server%/browse/'
+        jira.2.auth:     !!python/tuple [JIRA_USER_2, JIRA_PWD_2]
+
 
     services:
 
@@ -146,6 +155,18 @@ Usage
             class: logging.getLogger
             arguments:
                 - 'flowdock.%flowdock.test.flow.name%'
+
+        responders.jira:
+            class: shirka.responders.JiraResponder
+            arguments:
+              - '(?P<ID>JR1-[0-9]+)':
+                  server:     '%jira.1.server%'
+                  baseUrl:    '%jira.1.base_url%'
+                  basic_auth: '%jira.1.auth%'
+                '(?P<ID>JR2-[0-9]+)':
+                  server:     '%jira.2.server%'
+                  baseUrl:    '%jira.2.base_url%'
+                  basic_auth: '%jira.2.auth%'
                 
         # Configure Stream API Consumer with valid responders
         consumer.test.flowdock:
