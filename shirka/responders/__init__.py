@@ -53,3 +53,4 @@ from monitor import MonitorResponder
 from process import ProcessResponder
 from so import SoResponder
 from jira_responder import JiraResponder
+from version import VersionResponder
