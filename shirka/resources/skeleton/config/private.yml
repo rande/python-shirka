@@ -1,0 +1,5 @@
+parameters:
+    jira.demo.auth: !!python/tuple ['username', 'password']
+ 
+    flowdock.user.name:    rande
+    flowdock.user.token:   my user token

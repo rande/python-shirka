@@ -1,0 +1,20 @@
+parameters:
+    responders.test.monitor:
+        http:
+            sonata: { url: 'http://github.com', options: {} }
+
+services:
+    responders.test.whois:
+        class: shirka.responders.flowdock.FlowdockWhoisResponder
+        arguments:
+            - '%shirka.flowdock.test.organisation%'
+            - '%shirka.flowdock.test.name%'
+            - '%shirka.flowdock.user.token%'
+
+    responders.test.monitor:
+        class: shirka.responders.monitor.MonitorResponder
+        arguments:
+            - '%responders.test.monitor%'
+
+    responders.test.help:
+        class: shirka.responders.help.HelpResponder

@@ -1,0 +1,5 @@
+parameters:
+    consumers: [test]
+    bot.name: shirka-dev
+    bot.email: no-reply@example.com
+    bot.url: 'http://localhost:8080/public/index.html'

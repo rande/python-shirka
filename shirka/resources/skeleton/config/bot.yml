@@ -1,0 +1,48 @@
+shirka:
+    data_dir:                   '%project.root_folder%/data'
+    flowdock:
+        user_token:             '%flowdock.user.token%'
+        channels:
+            test: 
+                organisation:   organisation's name
+                name:           channel's name
+                token:          channel's token
+                responders: 
+                    - responders.rage_face
+                    - shirka.responders.math
+                    - shirka.responders.big_bro
+                    - shirka.responders.reminder
+                    - shirka.responders.status
+                    - shirka.responders.ascii
+                    - responders.test.help
+                    - responders.test.whois
+                    - responders.so
+
+services:
+    responders.rage_face:
+        class: shirka.responders.rageface.RagefaceResponder
+        kwargs:
+            faces: 
+                badumtss: "http://res.cloudinary.com/ragekino/image/upload/v1362760929/troll_ba_dum_tss_s_creewj.png"
+                cerealguy: "http://res.cloudinary.com/ragekino/image/upload/v1362760896/cereal_guy_cereal_guy_spitting_s_hhpkji.png"
+                cute: "http://res.cloudinary.com/ragekino/image/upload/v1362760895/cat_cat_overload_s_qmx7vg.png"
+                deskflip: "http://res.cloudinary.com/ragekino/image/upload/v1362760891/angry_desk_flip_s_esu2sj.png"
+                fuckyeah: "http://res.cloudinary.com/ragekino/image/upload/v1362760903/fuck_yeah_fuck_yeah_clean_s_q6zhjp.png"
+                genius: "http://res.cloudinary.com/ragekino/image/upload/v1362760911/misc_genius_s_smgot2.png"
+                itssomething: "http://res.cloudinary.com/ragekino/image/upload/v1362760917/neutral_its_something_s_ytrs7y.png"
+                lol: "http://res.cloudinary.com/ragekino/image/upload/v1362760908/laughing_lol_crazy_s_x6hjhg.png"
+                longneck: "http://res.cloudinary.com/ragekino/image/upload/v1362760926/surprised_long_neck_surprise_s_xcrggy.png"
+                megusta: "http://res.cloudinary.com/ragekino/image/upload/v1362760909/me_gusta_me_gusta_s_fuqfcn.png"
+                notbad: "http://res.cloudinary.com/ragekino/image/upload/v1362760920/obama_really_not_bad_s_nkkjic.png"
+                nothing: "http://res.cloudinary.com/ragekino/image/upload/v1362760913/misc_nothing_to_do_here_s_onqypc.png"
+                pokerface: "http://res.cloudinary.com/ragekino/image/upload/v1362760918/neutral_poker_face_no_text_s_shbpto.png"
+                rageguy: "http://res.cloudinary.com/ragekino/image/upload/v1362760923/rage_rage_s_gwrlyy.png"
+                sir: "http://res.cloudinary.com/ragekino/image/upload/v1362760916/neutral_feel_like_a_sir_clean_s_bgjky3.png"
+                troll: "http://res.cloudinary.com/ragekino/image/upload/v1362760933/troll_troll_face_s_kshfjf.png"
+                true: "http://res.cloudinary.com/ragekino/image/upload/v1362760915/misc_true_story_realistic_s_fq1lev.png"
+                win: "http://res.cloudinary.com/ragekino/image/upload/v1362760911/misc_freddie_mercury_s_ydyqcx.png"
+                bitch: "http://res.cloudinary.com/ragekino/image/upload/v1362760901/fuck_that_bitch_fuck_that_shit_female_s_ivczxv.png"
+                ragenuclear: "http://res.cloudinary.com/ragekino/image/upload/v1362760922/rage_nuclear_s_yjdskn.png"
+
+    responders.so:
+        class: shirka.responders.so.SoResponder
