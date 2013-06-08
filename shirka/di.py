@@ -22,6 +22,8 @@ class Extension(ioc.component.Extension):
 
         container_builder.parameters.set('shirka.data.dir', config.get('data_dir', False))
 
+        self.build_flowdock_consumer(config, container_builder)
+
     def pre_build(object, container_builder, container):
         """
         Configure Flask instance and Twisted
@@ -56,3 +58,46 @@ class Extension(ioc.component.Extension):
         ])
 
 
+    def build_flowdock_consumer(self, config, container_builder):
+        if not config.get('flowdock'):
+            return
+
+        flowdock = config.get_dict('flowdock')
+
+        container_builder.parameters.set('shirka.flowdock.user.token', flowdock.get_dict('user_token'))
+        defaults = {
+            'organisation': False,
+            'name': False,
+            'token': False,
+            'responders': []
+        }
+
+        for name, parameters in flowdock.get_dict('channels').all().iteritems():
+            d = defaults.copy()
+            
+            d.update(parameters.all())
+
+            container_builder.parameters.set('shirka.flowdock.%s.organisation' % name, d['organisation'])
+            container_builder.parameters.set('shirka.flowdock.%s.name' % name, d['name'])
+            container_builder.parameters.set('shirka.flowdock.%s.token' % name, d['token'])
+
+            flowdockId = "shirka.flowdock.%s" % name
+            loggerId = "shirka.consumer.flowdock.%s.logger" % name
+            consumerId = "shirka.consumer.flowdock.%s" % name
+
+            container_builder.add(flowdockId, ioc.component.Definition('flowdock.FlowDock', [], {
+                'api_key': d['token'],
+                'app_name': name,
+                'project': d['name'],
+            }))
+
+            container_builder.add(loggerId, ioc.component.Definition('logging.getLogger', [consumerId]))
+
+            container_builder.add(consumerId, ioc.component.Definition('shirka.consumers.FlowDockConsumer', [
+                ioc.component.Reference('shirka.bot'),
+                d['token'],
+                [(responderId, ioc.component.Reference(responderId)) for responderId in d['responders']],
+                ioc.component.Reference(flowdockId),
+            ], {
+                'logger': ioc.component.Reference(loggerId)
+            }))

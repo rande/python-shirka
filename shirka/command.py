@@ -16,17 +16,17 @@ class StartCommand(Command):
         consumers = {}
         
         for flow in self.container.parameters.get('consumers'):
-            if not self.container.has("consumer.%s.flowdock" % flow):
+            if not self.container.has("shirka.consumer.flowdock.%s" % flow):
                 continue
 
-            consumers[flow] = self.container.get("consumer.%s.flowdock" % flow)
+            consumers[flow] = self.container.get("shirka.consumer.flowdock.%s" % flow)
 
             if not args.debug:
                 twistedhttpstream.stream(
                     self.container.get('ioc.extra.twisted.reactor'), 
-                    "https://stream.flowdock.com/flows/%s/%s" % (self.container.parameters.get("flowdock.%s.organisation" % flow), flow), 
-                    self.container.get("consumer.%s.flowdock" % flow), 
-                    username=self.container.parameters.get("flowdock.user.token"),
+                    "https://stream.flowdock.com/flows/%s/%s" % (self.container.parameters.get("shirka.flowdock.%s.organisation" % flow), flow), 
+                    self.container.get("shirka.consumer.flowdock.%s" % flow), 
+                    username=self.container.parameters.get("shirka.flowdock.user.token"),
                     password=""
                 )
         

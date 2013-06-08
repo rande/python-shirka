@@ -4,7 +4,6 @@ from shirka.responders import Responder
 from shirka.consumers import BaseTestCase
 
 class HelpResponder(Responder):
-
     def __init__(self):
         self.helps = []
 
@@ -12,7 +11,7 @@ class HelpResponder(Responder):
         return 'help'
 
     def on_start(self, consumer):
-        for responder in consumer.responders:
+        for id, responder in consumer.responders:
             if not responder.generate.__doc__:
                 continue
 
@@ -64,9 +63,9 @@ class TestHelpResponder(BaseTestCase):
         self.assertFalse(self.responder.support(self.create_request("fuu")))
 
     def test_on_start(self):
-        self.responder.on_start(FakeConsumer([FakeResponder(), FakeEmptyHelpResponder()]))
+        self.responder.on_start(FakeConsumer([('service.id.1', FakeResponder()), ('service.id.2', FakeEmptyHelpResponder())]))
         self.assertEquals([('fake', '> \n> My help message\n> Look greats from here\n>')], self.responder.helps)
 
     def test_generate(self):
-        self.responder.on_start(FakeConsumer([FakeResponder()]))
+        self.responder.on_start(FakeConsumer([('service.id.1', FakeResponder())]))
         self.assertEquals("# Help\n##fake \n> \n> My help message\n> Look greats from here\n>\n---\n", self.generate("help"))

@@ -27,8 +27,11 @@ class StdioProtocol(basic.LineReceiver, Consumer):
         self.sendLine("Debug console. Type 'help' for help.")
 
         for name, consumer in self.consumers.iteritems():
-            for responder in consumer.responders:
-                self.handle_response(responder.on_start(consumer), Request('on_start', User(None, None, self.user_id), 'init', 'cli'))
+            for id, responder in consumer.responders:
+                self.handle_response(
+                    responder.on_start(consumer), 
+                    Request('on_start', User(None, None, self.user_id), 'init', 'cli')
+                )
 
         if len(self.consumers) == 1:
             self.consumer = self.consumers.keys()[0]

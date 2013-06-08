@@ -21,8 +21,8 @@ DEFAULT_IMG = {
 }
 
 class SoResponder(Responder):
-    def __init__(self, imgs=DEFAULT_IMG):
-        self.imgs = imgs
+    def __init__(self, imgs=None):
+        self.imgs = imgs or DEFAULT_IMG.copy()
 
     def name(self):
         return 'so'

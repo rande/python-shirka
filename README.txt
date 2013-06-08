@@ -76,7 +76,7 @@ Usage
                 container.get('ioc.extra.twisted.reactor'), 
                 "https://stream.flowdock.com/flows/%s/%s" % (container.parameters.get("flowdock.%s.organisation" % flow), flow), 
                 container.get("consumer.%s.flowdock" % flow), 
-                username=container.parameters.get("flowdock.user.token"),
+                username=container.parameters.get("shirka.flowdock.user.token"),
                 password=""
             )
         

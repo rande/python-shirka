@@ -58,7 +58,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver, Consumer):
 
     def handle_message(self, request):
         responses = []
-        for responder in self.responders:
+        for id, responder in self.responders:
             if not responder.support(request):
                 continue
 
