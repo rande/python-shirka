@@ -32,16 +32,16 @@ class SoResponder(Responder):
         usage: so [mood] : display the related image
                so help : display available moods
         """
-        words = request.content.split(" ")
+        words = request.content.split(self.name().join(' '))
 
-        if len(words) < 2:
+        if len(words) != 1:
             return False
 
-        if words[1] == 'help':
+        if words[0] == 'help':
             return "Moods available: %s" % (", ".join(self.imgs))
 
-        if words[1] in self.imgs:
-            return self.imgs[words[1]]
+        if words[0] in self.imgs:
+            return self.imgs[words[0]]
 
         return "so fail!!!"
 
@@ -65,6 +65,9 @@ class TestSoResponder(BaseTestCase):
 
     def test_unavailable_mood(self):
         self.assertEquals(self.generate("so crap"), "so fail!!!")
+
+    def test_split(self):
+        self.assertFalse(self.generate("some example"))
 
     def test_on_start(self):
         self.assertFalse(self.responder.on_start(False))
