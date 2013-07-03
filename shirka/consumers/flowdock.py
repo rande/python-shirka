@@ -29,7 +29,7 @@ class FlowDockConsumer(twistedhttpstream.MessageReceiver, Consumer):
 
     def connectionMade(self):
         self.logger.info("Connection made to flowdock")
-        for responder in self.responders:
+        for id, responder in self.responders:
             self.handle_response(responder.on_start(self), Request('on_start', User(None, None, 0), 'init', 'flowdock'))
 
     def create_request(self, message):

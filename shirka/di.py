@@ -64,7 +64,7 @@ class Extension(ioc.component.Extension):
 
         flowdock = config.get_dict('flowdock')
 
-        container_builder.parameters.set('shirka.flowdock.user.token', flowdock.get_dict('user_token'))
+        container_builder.parameters.set('shirka.flowdock.user.token', flowdock.get('user_token'))
         defaults = {
             'organisation': False,
             'name': False,
