@@ -32,16 +32,16 @@ class SoResponder(Responder):
         usage: so [mood] : display the related image
                so help : display available moods
         """
-        words = request.content.split(self.name().join(' '))
+        words = request.content.split(' ')
 
-        if len(words) != 1:
+        if len(words) != 2 or words[0] != 'so':
             return False
 
-        if words[0] == 'help':
+        if words[1] == 'help':
             return "Moods available: %s" % (", ".join(self.imgs))
 
-        if words[0] in self.imgs:
-            return self.imgs[words[0]]
+        if words[1] in self.imgs:
+            return self.imgs[words[1]]
 
         return "so fail!!!"
 
