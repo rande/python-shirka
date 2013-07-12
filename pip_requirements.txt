@@ -16,6 +16,5 @@ python-dateutil
 python-flowdock
 requests
 sympy
-twisted
 twistedhttpstream
 pyOpenSSL
